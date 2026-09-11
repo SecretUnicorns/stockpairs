@@ -25,7 +25,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <footer className="p-4 text-center text-sm">
           <p>
             stockpairs is for informational purposes only and is not financial
-            advice. We did not create, launch, or issue any of the tokens
+            advice. Listing a token or stock here is not an endorsement,
+            recommendation, or suggestion to buy, sell, or hold it. We did not
+            create, launch, or issue any of the tokens
             listed, and we are not affiliated with any of them or their
             projects.
           </p>
