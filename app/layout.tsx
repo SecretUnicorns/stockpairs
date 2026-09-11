@@ -20,7 +20,18 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+      <body className="flex min-h-screen flex-col">
+        {children}
+        <footer className="p-4 text-center text-sm">
+          <p>
+            stockpairs is for informational purposes only and is not financial
+            advice. Token and stock pairings and contract addresses may be
+            inaccurate or out of date — always verify a contract address
+            yourself before you trade. Crypto and tokenized stocks are risky,
+            and we are not responsible for your losses.
+          </p>
+        </footer>
+      </body>
     </html>
   );
 }
