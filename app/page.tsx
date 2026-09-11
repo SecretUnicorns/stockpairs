@@ -1,3 +1,4 @@
+import CopyAddress from "@/app/copy-address";
 import { chainLabels, pairedKindLabels, pairs } from "@/lib/pairs";
 
 export default function Home() {
@@ -20,14 +21,16 @@ export default function Home() {
             {pairs.map((pair) => (
               <tr key={`${pair.chain}:${pair.token.address}`} className="border-t">
                 <td className="p-2">${pair.token.symbol}</td>
-                <td className="p-2 font-mono break-all">{pair.token.address}</td>
+                <td className="p-2">
+                  <CopyAddress address={pair.token.address} />
+                </td>
                 <td className="p-2">
                   ${pair.pairedWith.symbol} —{" "}
                   {pairedKindLabels[pair.pairedWith.kind]} for{" "}
                   {pair.pairedWith.name}
                 </td>
-                <td className="p-2 font-mono break-all">
-                  {pair.pairedWith.address}
+                <td className="p-2">
+                  <CopyAddress address={pair.pairedWith.address} />
                 </td>
                 <td className="p-2">{chainLabels[pair.chain]}</td>
                 <td className="p-2">
