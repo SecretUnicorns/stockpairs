@@ -44,6 +44,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             or below the real stock, and liquidity can disappear at any time.
           </p>
           <p>
+            We are not affiliated with DexScreener, Robinhood, Robinhood Chain,
+            Solana, or any other site, exchange, chain, or service linked from
+            or named on this site. Links are provided for convenience only — we
+            do not control those sites and are not responsible for their content
+            or accuracy.
+          </p>
+          <p>
             We are not responsible for any losses, including losses from
             honeypots, scams, rug pulls, or incorrect information on this site.
             Crypto and tokenized stocks are highly risky — use this site at
