@@ -23,17 +23,23 @@ export default function CopyAddress({ address }: { address: string }) {
   }
 
   return (
-    <button
-      type="button"
-      onClick={copy}
-      title="Copy address"
-      className="cursor-pointer text-left font-mono break-all hover:underline"
-    >
-      {address}
-      <span aria-live="polite" className="ml-2 font-sans text-xs">
+    <span className="relative block">
+      <button
+        type="button"
+        onClick={copy}
+        title="Copy address"
+        className="w-full cursor-pointer text-left font-mono break-all hover:underline"
+      >
+        {address}
+      </button>
+      {/* Positioned out of the flow so showing it never shifts the layout. */}
+      <span
+        aria-live="polite"
+        className="pointer-events-none absolute right-0 bottom-0 bg-[var(--background)] pl-2 text-xs"
+      >
         {status === "copied" && "Copied!"}
         {status === "failed" && "Copy failed"}
       </span>
-    </button>
+    </span>
   );
 }
