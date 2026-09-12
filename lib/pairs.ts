@@ -7,6 +7,18 @@ export const chainLabels: Record<Chain, string> = {
   robinhood: "Robinhood Chain",
 };
 
+/**
+ * What the paired asset actually is on-chain. Every pair trades against a
+ * token, never the underlying stock or coin itself.
+ */
+export type PairedKind = "tokenized-stock" | "bridged-crypto" | "crypto-token";
+
+export const pairedKindLabels: Record<PairedKind, string> = {
+  "tokenized-stock": "tokenized stock",
+  "bridged-crypto": "bridged crypto",
+  "crypto-token": "crypto token",
+};
+
 export type Asset = {
   symbol: string;
   address: string;
@@ -14,7 +26,7 @@ export type Asset = {
 
 export type PairedAsset = Asset & {
   name: string;
-  kind: "stock" | "crypto";
+  kind: PairedKind;
 };
 
 export type Pair = {
