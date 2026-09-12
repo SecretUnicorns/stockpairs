@@ -1,0 +1,86 @@
+[
+  {
+    "chain": "solana",
+    "token": {
+      "symbol": "KNOTS",
+      "address": "8RVBk8vxLiUHueLUW1f4izFVqN3nWippLhkohKg6EGkS"
+    },
+    "pairedWith": {
+      "symbol": "STONK",
+      "name": "StonkFun",
+      "kind": "crypto-token",
+      "address": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx"
+    },
+    "dexscreenerUrl": "https://dexscreener.com/solana/buvzslllg7gwoyjvou31pxibveaza6gxtavz9vd3cws9"
+  },
+  {
+    "chain": "solana",
+    "token": {
+      "symbol": "ZCAT",
+      "address": "HcRLc9VDgjLeK154xDawfb1dmVJ98DoSqcwTHGqiDeJR"
+    },
+    "pairedWith": {
+      "symbol": "ZEC",
+      "name": "Zcash",
+      "kind": "bridged-crypto",
+      "address": "A7bdiYdS5GjqGFtxf17ppRHtDKPkkRqbKtR27dxvQXaS"
+    },
+    "dexscreenerUrl": "https://dexscreener.com/solana/btccxxtfi7a9xjte1exkn38jgie35s6gnerxd8dm61rc"
+  },
+  {
+    "chain": "robinhood",
+    "token": {
+      "symbol": "NUDES",
+      "address": "0xbe98b75361935b18d688409424a869a4C3dC7401"
+    },
+    "pairedWith": {
+      "symbol": "SNAP",
+      "name": "Snap",
+      "kind": "tokenized-stock",
+      "address": "0xF6589F11Bc40b669e584073F428B05562F568733"
+    },
+    "dexscreenerUrl": "https://dexscreener.com/robinhood/0x383957bce2341f59ff97c47eda2ad3b3b839b7050adc8a4747a398abca0ad552"
+  },
+  {
+    "chain": "robinhood",
+    "token": {
+      "symbol": "BONER",
+      "address": "0x98096d17e191B3dA1d5f99a6D7b3584351b11E18"
+    },
+    "pairedWith": {
+      "symbol": "HIMS",
+      "name": "Hims & Hers Health",
+      "kind": "tokenized-stock",
+      "address": "0xCceE82fE024c36fA15E1005edE3E9e4787e23D09"
+    },
+    "dexscreenerUrl": "https://dexscreener.com/robinhood/0x9c89b04303dfa76f3f6fb02c2b77be0e8a00ab8fa00d507119acd54ab3e8640d"
+  },
+  {
+    "chain": "robinhood",
+    "token": {
+      "symbol": "DIESEL",
+      "address": "0xED44A1B434d59B8c4F162D67A43eB198d4C64CB6"
+    },
+    "pairedWith": {
+      "symbol": "RIVN",
+      "name": "Rivian Automotive",
+      "kind": "tokenized-stock",
+      "address": "0xB1BF26c1D20ff267A4f93550d1E0d06ac40a114B"
+    },
+    "dexscreenerUrl": "https://dexscreener.com/robinhood/0x765861502b282fd5787f66636ac14899eb433ea9"
+  },
+  {
+    "chain": "robinhood",
+    "token": {
+      "symbol": "MEME",
+      "address": "0x385F4f8ae47651ce5F58F5265395a669f8281e18"
+    },
+    "pairedWith": {
+      "symbol": "AMC",
+      "name": "AMC Entertainment",
+      "kind": "tokenized-stock",
+      "address": "0x05a3d1Cd21d0C88145E82600E62e7E496e0F222B"
+    },
+    "dexscreenerUrl": "https://dexscreener.com/robinhood/0x27ccf0a6d1ee74840220715bcca7d3b01e0d33aa30d0259b47ae1585b3f4c071"
+  }
+]
