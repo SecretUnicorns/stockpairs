@@ -12,7 +12,7 @@ import {
   formatPrice,
   formatUsd,
 } from "@/lib/format";
-import { getHourlyCandles } from "@/lib/geckoterminal";
+import { getChartCandles } from "@/lib/geckoterminal";
 import {
   chainLabels,
   findPair,
@@ -90,7 +90,7 @@ export default async function PairPage({ params }: PageProps<"/pairs/[slug]">) {
       ? market.marketCap / market.priceUsd
       : null;
   const candles = pool
-    ? await getHourlyCandles(pair.chain, pool, token.address)
+    ? await getChartCandles(pair.chain, pool, token.address)
     : null;
 
   const stats = [
@@ -174,8 +174,12 @@ export default async function PairPage({ params }: PageProps<"/pairs/[slug]">) {
       </dl>
 
       <section className="flex flex-col gap-2">
-        {candles && candles.length > 0 ? (
-          <PriceChart candles={candles} supply={supply} />
+        {candles?.hourly && candles.hourly.length > 0 ? (
+          <PriceChart
+            hourly={candles.hourly}
+            daily={candles.daily}
+            supply={supply}
+          />
         ) : (
           <p className="border border-foreground bg-surface px-4 py-16 text-center text-muted">
             Chart unavailable right now.
