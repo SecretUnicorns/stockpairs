@@ -84,6 +84,11 @@ export default async function PairPage({ params }: PageProps<"/pairs/[slug]">) {
   const { token, pairedWith } = pair;
   const created = market?.poolCreatedAt ?? null;
   const pool = market?.listedPoolAddress ?? null;
+  // Tokens in circulation, implied by today's market cap and price.
+  const supply =
+    market?.marketCap && market.priceUsd
+      ? market.marketCap / market.priceUsd
+      : null;
   const candles = pool
     ? await getHourlyCandles(pair.chain, pool, token.address)
     : null;
@@ -170,7 +175,7 @@ export default async function PairPage({ params }: PageProps<"/pairs/[slug]">) {
 
       <section className="flex flex-col gap-2">
         {candles && candles.length > 0 ? (
-          <PriceChart candles={candles} />
+          <PriceChart candles={candles} supply={supply} />
         ) : (
           <p className="border border-foreground bg-surface px-4 py-16 text-center text-muted">
             Chart unavailable right now.
