@@ -3,6 +3,7 @@ import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import DisclaimerGate from "@/app/disclaimer-gate";
 import DisclaimerText from "@/app/disclaimer-text";
+import { SITE_URL } from "@/lib/site";
 
 const archivo = Archivo({
   variable: "--font-archivo",
@@ -15,10 +16,22 @@ const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
 });
 
+const description =
+  "Live board of meme coins paired with tokenized stocks and crypto on Solana and Robinhood Chain.";
+
 export const metadata: Metadata = {
+  // Lets pages use relative links ("/pairs/knots") in share and SEO tags.
+  metadataBase: new URL(SITE_URL),
   title: "stockpairs",
-  description:
-    "Live board of meme coins paired with tokenized stocks and crypto on Solana and Robinhood Chain.",
+  description,
+  openGraph: {
+    siteName: "stockpairs",
+    type: "website",
+    title: "stockpairs",
+    description,
+  },
+  // Big image previews on X instead of a small square.
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -35,9 +35,21 @@ export async function generateMetadata({
 }: PageProps<"/pairs/[slug]">): Promise<Metadata> {
   const pair = findPair((await params).slug);
   if (!pair) return {};
+  const title = `$${pair.token.symbol} / $${pair.pairedWith.symbol} — stockpairs`;
+  const description = `$${pair.token.symbol} is a meme coin on ${chainLabels[pair.chain]} paired with $${pair.pairedWith.symbol}, a ${pairedKindLabels[pair.pairedWith.kind]} for ${pair.pairedWith.name}. Live price, liquidity, how the pairing works, and the risks.`;
+  const url = `/pairs/${pairSlug(pair)}`;
   return {
-    title: `$${pair.token.symbol} / $${pair.pairedWith.symbol} — stockpairs`,
-    description: `$${pair.token.symbol} is a meme coin on ${chainLabels[pair.chain]} paired with $${pair.pairedWith.symbol}, a ${pairedKindLabels[pair.pairedWith.kind]} for ${pair.pairedWith.name}. Live price, liquidity, how the pairing works, and the risks.`,
+    title,
+    description,
+    alternates: { canonical: url },
+    // Replaces the layout's openGraph, so repeat the site-wide fields.
+    openGraph: {
+      siteName: "stockpairs",
+      type: "website",
+      title,
+      description,
+      url,
+    },
   };
 }
 
