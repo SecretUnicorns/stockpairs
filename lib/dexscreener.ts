@@ -16,6 +16,9 @@ type DexPair = {
   liquidity?: { usd?: number };
   volume?: { h24?: number };
   info?: { imageUrl?: string };
+  dexId?: string;
+  labels?: string[];
+  pairCreatedAt?: number;
 };
 
 /** Live numbers for one row of the board. `null` means unavailable. */
@@ -28,6 +31,10 @@ export type MarketData = {
   /** Pool-level: from the pool listed for this pair. */
   liquidityUsd: number | null;
   volume24h: number | null;
+  /** Where the listed pool lives, e.g. "Raydium CPMM" or "Uniswap v4". */
+  dex: string | null;
+  /** When the listed pool was created, in milliseconds since 1970. */
+  poolCreatedAt: number | null;
 };
 
 /** The pool address is the last segment of the DexScreener pair URL. */
@@ -73,6 +80,8 @@ export async function getMarketData(
           marketCap: token?.marketCap ?? null,
           liquidityUsd: pool?.liquidity?.usd ?? null,
           volume24h: pool?.volume?.h24 ?? null,
+          dex: dexName(pool),
+          poolCreatedAt: pool?.pairCreatedAt ?? null,
         },
       ];
     }),
@@ -124,6 +133,12 @@ function chunk<T>(items: T[], size: number): T[][] {
 // Pair URLs are lowercased, so compare addresses case-insensitively.
 function same(a: string, b: string): boolean {
   return a.toLowerCase() === b.toLowerCase();
+}
+
+function dexName(pool: DexPair | undefined): string | null {
+  if (!pool?.dexId) return null;
+  const name = pool.dexId[0].toUpperCase() + pool.dexId.slice(1);
+  return [name, ...(pool.labels ?? [])].join(" ");
 }
 
 // next.config.ts only allows logos from DexScreener's CDN; anything else

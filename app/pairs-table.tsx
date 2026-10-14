@@ -1,16 +1,23 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import CopyAddress from "@/app/copy-address";
 import type { MarketData } from "@/lib/dexscreener";
-import { formatPercent, formatPrice, formatUsd } from "@/lib/format";
+import {
+  changeTone,
+  formatPercent,
+  formatPrice,
+  formatUsd,
+} from "@/lib/format";
 import {
   type Chain,
   chainLabels,
   type Pair,
   type PairedKind,
   pairedKindLabels,
+  pairSlug,
 } from "@/lib/pairs";
 
 export type Row = { pair: Pair; market: MarketData | null };
@@ -262,7 +269,12 @@ function PairRow({ pair, market }: Row) {
             />
           )}
           <div className="flex flex-col items-start gap-0.5">
-            <span className="font-semibold">${pair.token.symbol}</span>
+            <Link
+              href={`/pairs/${pairSlug(pair)}`}
+              className="font-semibold underline decoration-border underline-offset-4 hover:decoration-foreground"
+            >
+              ${pair.token.symbol}
+            </Link>
             <CopyAddress address={pair.token.address} />
           </div>
         </div>
@@ -271,13 +283,7 @@ function PairRow({ pair, market }: Row) {
         {formatPrice(market?.priceUsd ?? null)}
       </td>
       <td
-        className={`px-3 py-3 text-right font-mono font-medium ${
-          change === null || change === 0
-            ? "text-muted"
-            : change > 0
-              ? "text-up"
-              : "text-down"
-        }`}
+        className={`px-3 py-3 text-right font-mono font-medium ${changeTone(change)}`}
       >
         {formatPercent(change)}
       </td>

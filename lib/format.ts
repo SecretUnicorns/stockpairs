@@ -32,6 +32,22 @@ export function formatPercent(value: number | null): string {
   return value === null ? MISSING : `${percent.format(value)}%`;
 }
 
+/** Text colour class for a price move: up, down, or flat/unknown. */
+export function changeTone(value: number | null): string {
+  if (value === null || value === 0) return "text-muted";
+  return value > 0 ? "text-up" : "text-down";
+}
+
+// Fixed to UTC so the server and every visitor see the same date.
+const date = new Intl.DateTimeFormat("en-US", {
+  dateStyle: "medium",
+  timeZone: "UTC",
+});
+
+export function formatDate(ms: number | null): string {
+  return ms === null ? MISSING : date.format(ms);
+}
+
 /** `8RVBk8vx…EGkS` → `8RVB…EGkS`, `0xbe98b7…7401` → `0xbe98…7401`. */
 export function shortAddress(address: string): string {
   const head = address.startsWith("0x") ? 6 : 4;
