@@ -53,3 +53,10 @@ export function shortAddress(address: string): string {
   const head = address.startsWith("0x") ? 6 : 4;
   return `${address.slice(0, head)}…${address.slice(-4)}`;
 }
+
+/** How long ago `ms` was, compactly: "5h", "39d". */
+export function formatAge(ms: number | null, now: number): string {
+  if (ms === null) return MISSING;
+  const hours = Math.max(0, Math.floor((now - ms) / 3_600_000));
+  return hours < 24 ? `${hours}h` : `${Math.floor(hours / 24)}d`;
+}

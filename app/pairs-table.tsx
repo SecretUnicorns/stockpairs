@@ -4,9 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import CopyAddress from "@/app/copy-address";
+import Sparkline from "@/app/sparkline";
+import type { Trend } from "@/lib/candles";
 import type { MarketData } from "@/lib/dexscreener";
 import {
   changeTone,
+  formatAge,
   formatPercent,
   formatPrice,
   formatUsd,
@@ -20,27 +23,54 @@ import {
   pairSlug,
 } from "@/lib/pairs";
 
-export type Row = { pair: Pair; market: MarketData | null };
+export type Row = {
+  pair: Pair;
+  market: MarketData | null;
+  /** The last 7 days, for the sparkline. */
+  trend: Trend | null;
+};
 
 type SortKey =
   | "symbol"
   | "priceUsd"
   | "priceChange24h"
+  | "trend"
   | "marketCap"
   | "liquidityUsd"
-  | "volume24h";
+  | "volume24h"
+  | "age";
 type SortDir = "asc" | "desc";
 
 const sortableColumns: { key: SortKey; label: string }[] = [
   { key: "priceUsd", label: "Price" },
   { key: "priceChange24h", label: "24h" },
+  { key: "trend", label: "7d" },
   { key: "marketCap", label: "Market cap" },
   { key: "liquidityUsd", label: "Liquidity" },
   { key: "volume24h", label: "24h volume" },
+  { key: "age", label: "Age" },
 ];
 
+// The table only has room for the short name; filters keep the full one.
+const chainTags: Record<Chain, string> = {
+  solana: "Solana",
+  robinhood: "Robinhood",
+};
+
 function sortValue(row: Row, key: SortKey): string | number | null {
-  return key === "symbol" ? row.pair.token.symbol : (row.market?.[key] ?? null);
+  switch (key) {
+    case "symbol":
+      return row.pair.token.symbol;
+    case "trend":
+      return row.trend?.change ?? null;
+    case "age": {
+      // Older pools were created earlier, so flip the sign: biggest = oldest.
+      const created = row.market?.poolCreatedAt;
+      return created == null ? null : -created;
+    }
+    default:
+      return row.market?.[key] ?? null;
+  }
 }
 
 /** Sorts a copy of the rows. Missing values always go last. */
@@ -62,7 +92,14 @@ function sortRows(rows: Row[], key: SortKey, dir: SortDir): Row[] {
  * The board. The server fetches the rows; sorting and filtering happen here
  * in the browser, so they are instant and the page itself stays cached.
  */
-export default function PairsTable({ rows }: { rows: Row[] }) {
+export default function PairsTable({
+  rows,
+  now,
+}: {
+  rows: Row[];
+  /** The server's clock at render time, used for pool ages. */
+  now: number;
+}) {
   const [sortKey, setSortKey] = useState<SortKey>("marketCap");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [chain, setChain] = useState<Chain | "all">("all");
@@ -120,6 +157,7 @@ export default function PairsTable({ rows }: { rows: Row[] }) {
               <SortHeader
                 label="Token"
                 align="left"
+                sticky
                 dir={sortKey === "symbol" ? sortDir : null}
                 onSort={() => sortBy("symbol")}
               />
@@ -134,22 +172,19 @@ export default function PairsTable({ rows }: { rows: Row[] }) {
               ))}
               <th className="px-3 py-3 font-medium">Paired with</th>
               <th className="px-3 py-3 font-medium">Chain</th>
-              <th className="px-3 py-3 font-medium">
-                <span className="sr-only">Pool</span>
-              </th>
             </tr>
           </thead>
           <tbody>
-            {visible.map(({ pair, market }) => (
+            {visible.map((row) => (
               <PairRow
-                key={`${pair.chain}:${pair.token.address}`}
-                pair={pair}
-                market={market}
+                key={`${row.pair.chain}:${row.pair.token.address}`}
+                row={row}
+                now={now}
               />
             ))}
             {visible.length === 0 && (
               <tr className="border-t border-border">
-                <td colSpan={9} className="px-3 py-10 text-center text-muted">
+                <td colSpan={10} className="px-3 py-10 text-center text-muted">
                   No pairs match these filters.{" "}
                   <button
                     type="button"
@@ -177,18 +212,22 @@ function SortHeader({
   align,
   dir,
   onSort,
+  sticky = false,
 }: {
   label: string;
   align: "left" | "right";
   dir: SortDir | null;
   onSort: () => void;
+  sticky?: boolean;
 }) {
   return (
     <th
       aria-sort={
         dir === null ? undefined : dir === "asc" ? "ascending" : "descending"
       }
-      className={`px-3 py-3 font-medium ${align === "right" ? "text-right" : ""}`}
+      className={`px-3 py-3 font-medium ${align === "right" ? "text-right" : ""} ${
+        sticky ? `${stickyCell} bg-soft` : ""
+      }`}
     >
       <button
         type="button"
@@ -248,11 +287,20 @@ function FilterGroup<T extends string>({
   );
 }
 
-function PairRow({ pair, market }: Row) {
+/**
+ * Keeps the token column in view while the table scrolls sideways on a
+ * phone. It needs its own background, or the scrolled cells show through.
+ */
+const stickyCell = "sticky left-0 z-10 max-sm:border-r max-sm:border-border";
+
+function PairRow({ row, now }: { row: Row; now: number }) {
+  const { pair, market, trend } = row;
   const change = market?.priceChange24h ?? null;
   return (
-    <tr className="border-t border-border transition-colors hover:bg-soft/60">
-      <td className="px-3 py-3">
+    <tr className="group border-t border-border">
+      <td
+        className={`px-3 py-3 ${stickyCell} bg-surface transition-colors group-hover:bg-soft`}
+      >
         <div className="flex min-w-max items-center gap-3">
           {market?.imageUrl ? (
             <Image
@@ -287,6 +335,9 @@ function PairRow({ pair, market }: Row) {
       >
         {formatPercent(change)}
       </td>
+      <td className="px-3 py-3 text-right">
+        <Sparkline trend={trend} />
+      </td>
       <td className="px-3 py-3 text-right font-mono">
         {formatUsd(market?.marketCap ?? null)}
       </td>
@@ -295,6 +346,9 @@ function PairRow({ pair, market }: Row) {
       </td>
       <td className="px-3 py-3 text-right font-mono">
         {formatUsd(market?.volume24h ?? null)}
+      </td>
+      <td className="px-3 py-3 text-right font-mono text-muted">
+        {formatAge(market?.poolCreatedAt ?? null, now)}
       </td>
       <td className="min-w-48 px-3 py-3">
         <div className="flex flex-col items-start gap-0.5">
@@ -310,18 +364,8 @@ function PairRow({ pair, market }: Row) {
       </td>
       <td className="px-3 py-3">
         <span className="bg-soft px-2 py-1 font-mono text-[11px] tracking-wider whitespace-nowrap uppercase">
-          {chainLabels[pair.chain]}
+          {chainTags[pair.chain]}
         </span>
-      </td>
-      <td className="px-3 py-3 text-right">
-        <a
-          href={pair.dexscreenerUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block border border-foreground px-2.5 py-1.5 font-mono text-[11px] font-semibold whitespace-nowrap transition hover:-translate-y-0.5 hover:bg-orange hover:text-[#17100c]"
-        >
-          DexScreener ↗
-        </a>
       </td>
     </tr>
   );

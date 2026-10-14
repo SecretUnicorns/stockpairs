@@ -39,12 +39,31 @@ export async function getChartCandles(
   poolAddress: string,
   tokenAddress: string,
 ): Promise<ChartCandles> {
-  const pool = `${API}/networks/${networks[chain]}/pools/${poolAddress}/ohlcv`;
   const [hourly, daily] = await Promise.all([
-    fetchCandles(`${pool}/hour?limit=${HOURS}&token=${tokenAddress}`),
-    fetchCandles(`${pool}/day?limit=${DAYS}&token=${tokenAddress}`),
+    getHourlyCandles(chain, poolAddress, tokenAddress),
+    fetchCandles(
+      `${ohlcvUrl(chain, poolAddress)}/day?limit=${DAYS}&token=${tokenAddress}`,
+    ),
   ]);
   return { hourly, daily };
+}
+
+/**
+ * Just the hourly candles, for the board's sparklines. Same URL as the pair
+ * page uses, so both share one cached response instead of two API calls.
+ */
+export function getHourlyCandles(
+  chain: Chain,
+  poolAddress: string,
+  tokenAddress: string,
+): Promise<Candle[] | null> {
+  return fetchCandles(
+    `${ohlcvUrl(chain, poolAddress)}/hour?limit=${HOURS}&token=${tokenAddress}`,
+  );
+}
+
+function ohlcvUrl(chain: Chain, poolAddress: string): string {
+  return `${API}/networks/${networks[chain]}/pools/${poolAddress}/ohlcv`;
 }
 
 async function fetchCandles(url: string): Promise<Candle[] | null> {

@@ -1,13 +1,28 @@
 import PairsTable from "@/app/pairs-table";
+import { weekTrend } from "@/lib/candles";
 import { getMarketData } from "@/lib/dexscreener";
+import { getHourlyCandles } from "@/lib/geckoterminal";
 import { pairs } from "@/lib/pairs";
 
-export default async function Home() {
+/** Market data, 7-day trends, and when it was all loaded. */
+async function loadBoard() {
   const market = await getMarketData(pairs);
-  const rows = pairs.map((pair) => ({
-    pair,
-    market: market.get(pair) ?? null,
-  }));
+  const rows = await Promise.all(
+    pairs.map(async (pair) => {
+      const data = market.get(pair) ?? null;
+      const pool = data?.listedPoolAddress;
+      const hourly = pool
+        ? await getHourlyCandles(pair.chain, pool, pair.token.address)
+        : null;
+      return { pair, market: data, trend: weekTrend(hourly) };
+    }),
+  );
+  // One clock for the whole board, so server and browser show the same ages.
+  return { rows, loadedAt: Date.now() };
+}
+
+export default async function Home() {
+  const { rows, loadedAt } = await loadBoard();
 
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 pt-12 pb-6">
@@ -25,7 +40,7 @@ export default async function Home() {
         </p>
       </header>
 
-      <PairsTable rows={rows} />
+      <PairsTable rows={rows} now={loadedAt} />
 
       <div className="flex flex-col gap-2 text-sm text-muted">
         <p>
