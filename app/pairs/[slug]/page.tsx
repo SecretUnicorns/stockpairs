@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import CopyAddress from "@/app/copy-address";
+import PriceChart from "@/app/pairs/[slug]/price-chart";
 import { getMarketData } from "@/lib/dexscreener";
 import {
   changeTone,
@@ -11,6 +12,7 @@ import {
   formatPrice,
   formatUsd,
 } from "@/lib/format";
+import { getHourlyCandles } from "@/lib/geckoterminal";
 import {
   chainLabels,
   findPair,
@@ -81,6 +83,10 @@ export default async function PairPage({ params }: PageProps<"/pairs/[slug]">) {
   const market = (await getMarketData([pair])).get(pair) ?? null;
   const { token, pairedWith } = pair;
   const created = market?.poolCreatedAt ?? null;
+  const pool = market?.listedPoolAddress ?? null;
+  const candles = pool
+    ? await getHourlyCandles(pair.chain, pool, token.address)
+    : null;
 
   const stats = [
     { label: "Price", value: formatPrice(market?.priceUsd ?? null) },
@@ -161,6 +167,29 @@ export default async function PairPage({ params }: PageProps<"/pairs/[slug]">) {
           </div>
         ))}
       </dl>
+
+      <section className="flex flex-col gap-2">
+        {candles && candles.length > 0 ? (
+          <PriceChart candles={candles} />
+        ) : (
+          <p className="border border-foreground bg-surface px-4 py-16 text-center text-muted">
+            Chart unavailable right now.
+          </p>
+        )}
+        {pool && (
+          <p className="font-mono text-[11px] tracking-widest text-muted uppercase">
+            Chart data:{" "}
+            <a
+              href={`https://www.geckoterminal.com/${pair.chain}/pools/${pool}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-foreground"
+            >
+              GeckoTerminal
+            </a>
+          </p>
+        )}
+      </section>
 
       <div className="grid gap-x-10 gap-y-8 md:grid-cols-2">
         <Section number="01" title="What it's paired with">
