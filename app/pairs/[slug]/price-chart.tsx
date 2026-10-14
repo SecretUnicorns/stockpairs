@@ -90,15 +90,18 @@ function themeOptions() {
  * `supply` is today's market cap ÷ price. Without it, only price is shown.
  */
 export default function PriceChart({
+  symbol,
   hourly,
   daily,
   supply,
 }: {
+  symbol: string;
   hourly: Candle[];
   daily: Candle[] | null;
   supply: number | null;
 }) {
   const [range, setRange] = useState<Range>("7d");
+  const [expanded, setExpanded] = useState(false);
   const [mode, setMode] = useState<Mode>(supply === null ? "price" : "mcap");
   const container = useRef<HTMLDivElement>(null);
   const series = useRef<ISeriesApi<"Candlestick"> | null>(null);
@@ -146,6 +149,20 @@ export default function PriceChart({
     };
   }, []);
 
+  // While expanded: Esc closes it, and the page behind doesn't scroll.
+  useEffect(() => {
+    if (!expanded) return;
+    const close = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setExpanded(false);
+    };
+    window.addEventListener("keydown", close);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", close);
+      document.body.style.overflow = "";
+    };
+  }, [expanded]);
+
   // Swap the candles whenever the range or mode changes.
   useEffect(() => {
     series.current?.applyOptions({
@@ -169,7 +186,19 @@ export default function PriceChart({
   }, [visible, mode, range]);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div
+      role={expanded ? "dialog" : undefined}
+      aria-modal={expanded || undefined}
+      aria-label={expanded ? `$${symbol} chart` : undefined}
+      className={
+        expanded
+          ? "fixed inset-0 z-40 flex flex-col gap-3 bg-background p-4 sm:p-6"
+          : "flex flex-col gap-3"
+      }
+    >
+      {expanded && (
+        <p className="text-2xl font-extrabold tracking-tight">${symbol}</p>
+      )}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-3">
           {supply !== null && (
@@ -191,18 +220,30 @@ export default function PriceChart({
             onChange={setRange}
           />
         </div>
-        <p className="font-mono text-xs tracking-widest text-muted uppercase">
-          {range}:{" "}
-          <span className={`font-semibold ${changeTone(change)}`}>
-            {formatPercent(change)}
-          </span>
-        </p>
+        <div className="flex items-center gap-3">
+          <p className="font-mono text-xs tracking-widest text-muted uppercase">
+            {range}:{" "}
+            <span className={`font-semibold ${changeTone(change)}`}>
+              {formatPercent(change)}
+            </span>
+          </p>
+          <button
+            type="button"
+            onClick={() => setExpanded(!expanded)}
+            aria-label={expanded ? "Close full-screen chart" : "Expand chart"}
+            className="cursor-pointer border border-foreground bg-surface px-3 py-1.5 font-mono text-[11px] font-semibold tracking-wider whitespace-nowrap uppercase hover:bg-orange hover:text-[#17100c]"
+          >
+            {expanded ? "✕ Close" : "⤢ Expand"}
+          </button>
+        </div>
       </div>
       <div
         ref={container}
         role="img"
         aria-label={`${modes[mode]} chart, last ${range}`}
-        className="h-80 w-full border border-foreground sm:h-96"
+        className={`w-full border border-foreground ${
+          expanded ? "min-h-0 flex-1" : "h-80 sm:h-96"
+        }`}
       />
       {range === "all" && visible.length > 0 && (
         <p className="text-xs text-muted">
