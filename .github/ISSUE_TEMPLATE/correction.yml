@@ -1,0 +1,39 @@
+name: Report a correction
+description: Something on stockpairs is wrong or out of date — an address, a pairing, a dead pool, or a token that rugged.
+title: "Correction: $"
+labels: ["correction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for flagging it. **Please don't include personal information** (your name, contact details, or personal wallet addresses).
+
+  - type: input
+    id: pair
+    attributes:
+      label: Which pair?
+      description: The token symbol or the page link, e.g. `knots` or a stockpairs `/pairs/…` link.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: problem
+    attributes:
+      label: What's wrong?
+      options:
+        - Wrong contract address
+        - Wrong pairing or paired asset type
+        - The pool is dead or has moved
+        - The token rugged or is a scam
+        - Wrong text on the page
+        - Something else
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: What it says now, what it should say, and a link that shows it (explorer, DexScreener, the project's official account).
+    validations:
+      required: true

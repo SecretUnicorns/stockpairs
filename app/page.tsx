@@ -3,6 +3,7 @@ import { weekTrend } from "@/lib/candles";
 import { getMarketData } from "@/lib/dexscreener";
 import { getHourlyCandles } from "@/lib/geckoterminal";
 import { pairs } from "@/lib/pairs";
+import { suggestPairUrl } from "@/lib/site";
 
 /** Market data, 7-day trends, and when it was all loaded. */
 async function loadBoard() {
@@ -38,6 +39,14 @@ export default async function Home() {
           Meme coins paired with tokenized stocks and crypto, live from
           DexScreener.
         </p>
+        <a
+          href={suggestPairUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="self-start border border-foreground bg-acid px-3 py-2 font-mono text-xs font-semibold text-acid-ink transition hover:-translate-y-0.5 hover:bg-orange hover:text-[#17100c]"
+        >
+          Suggest a pair ↗
+        </a>
       </header>
 
       <PairsTable rows={rows} now={loadedAt} />
