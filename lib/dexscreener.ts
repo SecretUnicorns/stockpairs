@@ -15,12 +15,14 @@ type DexPair = {
   priceChange?: { h24?: number };
   liquidity?: { usd?: number };
   volume?: { h24?: number };
+  info?: { imageUrl?: string };
 };
 
 /** Live numbers for one row of the board. `null` means unavailable. */
 export type MarketData = {
   /** Token-level: from the token's main pool, where it is the base token. */
   priceUsd: number | null;
+  imageUrl: string | null;
   priceChange24h: number | null;
   marketCap: number | null;
   /** Pool-level: from the pool listed for this pair. */
@@ -66,6 +68,7 @@ export async function getMarketData(
         pair,
         {
           priceUsd: toNumber(token?.priceUsd),
+          imageUrl: logoUrl(token?.info?.imageUrl),
           priceChange24h: token?.priceChange?.h24 ?? null,
           marketCap: token?.marketCap ?? null,
           liquidityUsd: pool?.liquidity?.usd ?? null,
@@ -121,6 +124,14 @@ function chunk<T>(items: T[], size: number): T[][] {
 // Pair URLs are lowercased, so compare addresses case-insensitively.
 function same(a: string, b: string): boolean {
   return a.toLowerCase() === b.toLowerCase();
+}
+
+// next.config.ts only allows logos from DexScreener's CDN; anything else
+// would make next/image throw, so drop it.
+function logoUrl(url: string | undefined): string | null {
+  return url?.startsWith("https://cdn.dexscreener.com/cms/images/")
+    ? url
+    : null;
 }
 
 function toNumber(value: string | undefined): number | null {

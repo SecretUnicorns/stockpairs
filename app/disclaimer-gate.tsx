@@ -71,9 +71,12 @@ export default function DisclaimerGate({
         role="dialog"
         aria-modal="true"
         aria-labelledby="disclaimer-gate-title"
-        className="flex max-h-[85vh] w-full max-w-lg flex-col rounded-xl bg-[var(--background)] p-5 shadow-xl"
+        className="flex max-h-[85vh] w-full max-w-lg flex-col border border-foreground bg-background p-5 shadow-xl"
       >
-        <h2 id="disclaimer-gate-title" className="mb-1 font-semibold">
+        <h2
+          id="disclaimer-gate-title"
+          className="mb-1 text-2xl font-extrabold tracking-tight"
+        >
           Before you use stockpairs
         </h2>
         <p className="mb-3 text-sm">
@@ -85,7 +88,7 @@ export default function DisclaimerGate({
             if (atEnd(event.currentTarget)) setScrolledToEnd(true);
           }}
           tabIndex={0}
-          className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto rounded border p-3 text-sm"
+          className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto border border-border bg-surface p-3 text-sm"
         >
           {children}
         </div>
@@ -110,7 +113,7 @@ export default function DisclaimerGate({
           type="button"
           onClick={agree}
           disabled={!checked}
-          className="mt-3 w-full cursor-pointer rounded border px-3 py-1.5 text-sm font-semibold enabled:hover:underline disabled:cursor-not-allowed disabled:opacity-30"
+          className="mt-3 w-full cursor-pointer border border-foreground bg-acid px-3 py-3 font-mono text-sm font-semibold text-acid-ink transition enabled:hover:-translate-y-0.5 enabled:hover:bg-orange disabled:cursor-not-allowed disabled:opacity-30"
         >
           I agree
         </button>

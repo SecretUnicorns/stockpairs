@@ -31,3 +31,9 @@ export function formatUsd(value: number | null): string {
 export function formatPercent(value: number | null): string {
   return value === null ? MISSING : `${percent.format(value)}%`;
 }
+
+/** `8RVBk8vx…EGkS` → `8RVB…EGkS`, `0xbe98b7…7401` → `0xbe98…7401`. */
+export function shortAddress(address: string): string {
+  const head = address.startsWith("0x") ? 6 : 4;
+  return `${address.slice(0, head)}…${address.slice(-4)}`;
+}
