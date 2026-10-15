@@ -35,6 +35,8 @@ export type MarketData = {
   dex: string | null;
   /** When the listed pool was created, in milliseconds since 1970. */
   poolCreatedAt: number | null;
+  /** The listed pool's address with its real casing (the URL is lowercased). */
+  listedPoolAddress: string | null;
 };
 
 /** The pool address is the last segment of the DexScreener pair URL. */
@@ -82,6 +84,7 @@ export async function getMarketData(
           volume24h: pool?.volume?.h24 ?? null,
           dex: dexName(pool),
           poolCreatedAt: pool?.pairCreatedAt ?? null,
+          listedPoolAddress: pool?.pairAddress ?? null,
         },
       ];
     }),
