@@ -26,3 +26,27 @@ export function aggregate(candles: Candle[], seconds: number): Candle[] {
   }
   return merged;
 }
+
+export type Trend = {
+  /** Closing prices, oldest first, one per 4 hours. */
+  points: number[];
+  /** Percent change over the period. */
+  change: number;
+};
+
+const WEEK = 7 * 24 * 60 * 60;
+
+/** The last 7 days as a small series for a sparkline. */
+export function weekTrend(hourly: Candle[] | null): Trend | null {
+  const newest = hourly?.at(-1);
+  if (!hourly || !newest) return null;
+  const week = aggregate(
+    hourly.filter((c) => c.time > newest.time - WEEK),
+    4 * 60 * 60,
+  );
+  if (week.length < 2) return null;
+  return {
+    points: week.map((c) => c.close),
+    change: (newest.close / week[0].open - 1) * 100,
+  };
+}
