@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import PairsTable from "@/app/pairs-table";
 import { weekTrend } from "@/lib/candles";
 import { getMarketData } from "@/lib/dexscreener";
 import { getHourlyCandles } from "@/lib/geckoterminal";
 import { pairs } from "@/lib/pairs";
 import { suggestPairUrl } from "@/lib/site";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 /** Market data, 7-day trends, and when it was all loaded. */
 async function loadBoard() {
