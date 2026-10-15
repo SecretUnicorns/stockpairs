@@ -176,6 +176,7 @@ export default async function PairPage({ params }: PageProps<"/pairs/[slug]">) {
       <section className="flex flex-col gap-2">
         {candles?.hourly && candles.hourly.length > 0 ? (
           <PriceChart
+            symbol={token.symbol}
             hourly={candles.hourly}
             daily={candles.daily}
             supply={supply}
