@@ -1,26 +1,56 @@
 @import "tailwindcss";
 
+/* Stockpairs palette, from the strategy one-pager: cool paper and ink,
+   with an acid-lime accent and orange for hover. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f3f4ef;
+  --foreground: #121510;
+  --muted: #566052;
+  --surface: #ffffff;
+  --soft: #e6e9df;
+  --border: #c5cbbd;
+  --acid: #c8f13a;
+  --acid-ink: #172000;
+  --orange: #ff6b35;
+  /* Lime and orange are too light to read as text on paper, so price
+     moves use darker shades in light mode. */
+  --up: #4d7c0f;
+  --down: #c2410c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #111310;
+    --foreground: #f2f5ec;
+    --muted: #aeb8a6;
+    --surface: #191d18;
+    --soft: #232920;
+    --border: #3d4738;
+    --acid: #d2fa4e;
+    --acid-ink: #101600;
+    --orange: #ff7a48;
+    --up: #d2fa4e;
+    --down: #ff7a48;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-soft: var(--soft);
+  --color-border: var(--border);
+  --color-acid: var(--acid);
+  --color-acid-ink: var(--acid-ink);
+  --color-orange: var(--orange);
+  --color-up: var(--up);
+  --color-down: var(--down);
+  --font-sans: var(--font-archivo);
+  --font-mono: var(--font-ibm-plex-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
