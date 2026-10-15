@@ -4,6 +4,7 @@ import {
   CandlestickSeries,
   createChart,
   type IChartApi,
+  PriceScaleMode,
   type ISeriesApi,
   type UTCTimestamp,
 } from "lightweight-charts";
@@ -11,6 +12,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { aggregate, type Candle } from "@/lib/candles";
 import {
   changeTone,
+  formatDate,
   formatPercent,
   formatPrice,
   formatUsd,
@@ -24,14 +26,27 @@ const ranges = {
   "7d": { span: 7 * 24 * HOUR, candle: 4 * HOUR },
   "30d": { span: 30 * 24 * HOUR, candle: 24 * HOUR },
 };
-type Range = keyof typeof ranges;
+type Range = keyof typeof ranges | "all";
+const rangeLabels: Record<Range, string> = {
+  "24h": "24h",
+  "7d": "7d",
+  "30d": "30d",
+  all: "All",
+};
 
 /** What the candles show: the token price, or price × supply. */
 const modes = { mcap: "Market cap", price: "Price" };
 type Mode = keyof typeof modes;
 
-function candlesFor(candles: Candle[], range: Range): Candle[] {
+function candlesFor(
+  hourly: Candle[],
+  daily: Candle[] | null,
+  range: Range,
+): Candle[] {
+  // "All" uses the daily series, which goes back to the pool's creation.
+  if (range === "all") return daily ?? [];
   const { span, candle } = ranges[range];
+  const candles = hourly;
   // Measured from the newest candle, so server and browser agree.
   const since = (candles.at(-1)?.time ?? 0) - span;
   return aggregate(
@@ -75,10 +90,12 @@ function themeOptions() {
  * `supply` is today's market cap ÷ price. Without it, only price is shown.
  */
 export default function PriceChart({
-  candles,
+  hourly,
+  daily,
   supply,
 }: {
-  candles: Candle[];
+  hourly: Candle[];
+  daily: Candle[] | null;
   supply: number | null;
 }) {
   const [range, setRange] = useState<Range>("7d");
@@ -89,14 +106,14 @@ export default function PriceChart({
 
   const visible = useMemo(() => {
     const scale = mode === "mcap" && supply !== null ? supply : 1;
-    return candlesFor(candles, range).map((c) => ({
+    return candlesFor(hourly, daily, range).map((c) => ({
       time: c.time,
       open: c.open * scale,
       high: c.high * scale,
       low: c.low * scale,
       close: c.close * scale,
     }));
-  }, [candles, range, mode, supply]);
+  }, [hourly, daily, range, mode, supply]);
   const change =
     visible.length > 0
       ? (visible.at(-1)!.close / visible[0].open - 1) * 100
@@ -138,11 +155,18 @@ export default function PriceChart({
         minMove: 1e-10,
       },
     });
+    // Coins can rise thousands of times from launch, which would flatten
+    // everything else on a normal scale. A log scale gives every 10× the
+    // same height.
+    series.current?.priceScale().applyOptions({
+      mode:
+        range === "all" ? PriceScaleMode.Logarithmic : PriceScaleMode.Normal,
+    });
     series.current?.setData(
       visible.map((c) => ({ ...c, time: c.time as UTCTimestamp })),
     );
     chart.current?.timeScale().fitContent();
-  }, [visible, mode]);
+  }, [visible, mode, range]);
 
   return (
     <div className="flex flex-col gap-3">
@@ -158,7 +182,11 @@ export default function PriceChart({
           )}
           <Toggle
             label="Chart range"
-            options={{ "24h": "24h", "7d": "7d", "30d": "30d" }}
+            options={
+              daily && daily.length > 0
+                ? rangeLabels
+                : { "24h": "24h", "7d": "7d", "30d": "30d" }
+            }
             value={range}
             onChange={setRange}
           />
@@ -176,6 +204,13 @@ export default function PriceChart({
         aria-label={`${modes[mode]} chart, last ${range}`}
         className="h-80 w-full border border-foreground sm:h-96"
       />
+      {range === "all" && visible.length > 0 && (
+        <p className="text-xs text-muted">
+          All: daily candles since this pool was created (
+          {formatDate(visible[0].time * 1000)}), on a log scale so launch-day
+          prices don&apos;t flatten the rest.
+        </p>
+      )}
       {mode === "mcap" && (
         <p className="text-xs text-muted">
           Market cap = price × today&apos;s supply. If tokens were burned or
@@ -194,7 +229,7 @@ function Toggle<T extends string>({
   onChange,
 }: {
   label: string;
-  options: Record<T, string>;
+  options: Partial<Record<T, string>>;
   value: T;
   onChange: (value: T) => void;
 }) {
