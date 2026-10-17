@@ -10,18 +10,12 @@ export const SITE_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
 /** Only production should be in search results, not preview deployments. */
 export const isProduction = process.env.VERCEL_ENV === "production";
 
-/** Where contributions go. Change this if the project moves repos. */
-export const REPO_URL = "https://github.com/SecretUnicorns/stockpairs";
-
-/** Opens the "Suggest a pair" issue form. */
-export const suggestPairUrl = `${REPO_URL}/issues/new?template=suggest-pair.yml`;
-
-/** Opens the "Report a correction" form with the pair already filled in. */
-export function correctionUrl(symbol: string): string {
-  const params = new URLSearchParams({
-    template: "correction.yml",
-    title: `Correction: $${symbol}`,
-    pair: symbol.toLowerCase(),
-  });
-  return `${REPO_URL}/issues/new?${params}`;
-}
+/**
+ * Where people ask to get a token listed or report a mistake: a DM link set
+ * as the CONTACT_URL environment variable on Vercel, not in the code, so a
+ * personal handle never ends up in the repo. Only https links are used; if
+ * it isn't set, the contact links are simply not shown.
+ */
+export const CONTACT_URL = process.env.CONTACT_URL?.startsWith("https://")
+  ? process.env.CONTACT_URL
+  : null;

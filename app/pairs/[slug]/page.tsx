@@ -21,7 +21,7 @@ import {
   pairs,
   pairSlug,
 } from "@/lib/pairs";
-import { correctionUrl } from "@/lib/site";
+import { CONTACT_URL } from "@/lib/site";
 import Ticker from "@/app/ticker";
 
 // Only the pairs in data/pairs.json have pages; anything else is a 404.
@@ -264,17 +264,19 @@ export default async function PairPage({ params }: PageProps<"/pairs/[slug]">) {
         </Section>
       </div>
 
-      <p className="border-t border-foreground pt-4 text-sm text-muted">
-        Something wrong or out of date on this page?{" "}
-        <a
-          href={correctionUrl(token.symbol)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-semibold text-foreground underline hover:text-orange"
-        >
-          Report a correction ↗
-        </a>
-      </p>
+      {CONTACT_URL && (
+        <p className="border-t border-foreground pt-4 text-sm text-muted">
+          Something wrong or out of date on this page?{" "}
+          <a
+            href={CONTACT_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-foreground underline hover:text-orange"
+          >
+            Let us know ↗
+          </a>
+        </p>
+      )}
     </main>
   );
 }

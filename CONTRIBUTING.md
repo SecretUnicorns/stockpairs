@@ -1,15 +1,12 @@
 # Contributing to stockpairs
 
-stockpairs is an open directory of meme coins paired with tokenized stocks and crypto tokens. Every pair is checked by hand before it's listed, and we skip anything that looks like a rug.
+stockpairs is a dashboard of meme coins paired with tokenized stocks and crypto tokens. The team decides by hand what gets listed, and we don't list rugs.
 
-## Suggest a pair or report a mistake
+## Get a token listed or report a mistake
 
-No code needed — open an issue with one of the forms:
+Use the contact link in the site's footer (or tag a Chubbicorns community member). Please don't open GitHub issues or pull requests to request listings.
 
-- **[Suggest a pair](../../issues/new?template=suggest-pair.yml)** for a coin that's missing.
-- **[Report a correction](../../issues/new?template=correction.yml)** for a wrong address, a dead pool, or a token that rugged.
-
-## Add a pair yourself
+## Adding a pair (for the team)
 
 Each pair is one entry in [`data/pairs.json`](data/pairs.json):
 
@@ -47,10 +44,9 @@ npm run dev
 
 The new row should show live numbers on the board, and its page at `/pairs/<symbol>` should show a chart. `npm run build` fails if two pairs share a symbol.
 
-Open a pull request with one pair (or one correction) per PR, and say in the description why it isn't a rug.
+Open a pull request with one pair (or one correction) per PR.
 
 ## Ground rules
 
-- **No personal information** anywhere — not in issues, files, commits, or pull requests. Contract and pool addresses are fine; personal wallets, names and contact details are not.
-- **Disclose involvement.** If you're on the team, paid to promote, or a large holder, say so. It won't get the pair rejected.
+- **No personal information** anywhere — not in files, commits, or pull requests. Contract and pool addresses are fine; personal wallets, names and contact details are not.
 - **Nothing here is financial advice**, and listing a pair is not an endorsement.
