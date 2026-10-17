@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CopyAddress from "@/app/copy-address";
 import Sparkline from "@/app/sparkline";
 import type { Trend } from "@/lib/candles";
@@ -89,6 +89,26 @@ function sortRows(rows: Row[], key: SortKey, dir: SortDir): Row[] {
 }
 
 /**
+ * True if every word of the search appears somewhere in the pair: its symbol,
+ * what it's paired with (symbol or company name), the chain, or an address.
+ * "snap", "$meme", "amc robinhood" and a pasted contract address all work.
+ */
+function matchesSearch(pair: Pair, query: string): boolean {
+  const words = query.toLowerCase().replaceAll("$", " ").split(/\s+/);
+  const haystack = [
+    pair.token.symbol,
+    pair.token.address,
+    pair.pairedWith.symbol,
+    pair.pairedWith.name,
+    pair.pairedWith.address,
+    chainLabels[pair.chain],
+  ]
+    .join(" ")
+    .toLowerCase();
+  return words.every((word) => haystack.includes(word));
+}
+
+/**
  * The board. The server fetches the rows; sorting and filtering happen here
  * in the browser, so they are instant and the page itself stays cached.
  */
@@ -104,16 +124,40 @@ export default function PairsTable({
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [chain, setChain] = useState<Chain | "all">("all");
   const [kind, setKind] = useState<PairedKind | "all">("all");
+  const [query, setQuery] = useState("");
+  const searchBox = useRef<HTMLInputElement>(null);
 
   const visible = sortRows(
     rows.filter(
       ({ pair }) =>
         (chain === "all" || pair.chain === chain) &&
-        (kind === "all" || pair.pairedWith.kind === kind),
+        (kind === "all" || pair.pairedWith.kind === kind) &&
+        matchesSearch(pair, query.trim()),
     ),
     sortKey,
     sortDir,
   );
+
+  // Press "/" anywhere on the board to jump to the search box.
+  useEffect(() => {
+    function focusSearch(event: KeyboardEvent) {
+      const target = event.target as HTMLElement;
+      const typing = target.closest("input, textarea, [contenteditable]");
+      if (event.key !== "/" || typing || event.metaKey || event.ctrlKey) {
+        return;
+      }
+      event.preventDefault();
+      searchBox.current?.focus();
+    }
+    window.addEventListener("keydown", focusSearch);
+    return () => window.removeEventListener("keydown", focusSearch);
+  }, []);
+
+  function showAll() {
+    setQuery("");
+    setChain("all");
+    setKind("all");
+  }
 
   function sortBy(key: SortKey) {
     if (key === sortKey) {
@@ -127,6 +171,51 @@ export default function PairsTable({
 
   return (
     <div className="flex flex-col gap-3">
+      <div className="flex max-w-xl flex-col gap-1">
+        <label
+          htmlFor="pair-search"
+          className="font-mono text-[11px] tracking-widest text-muted uppercase"
+        >
+          Search
+        </label>
+        <div className="relative">
+          <input
+            ref={searchBox}
+            id="pair-search"
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") setQuery("");
+            }}
+            placeholder="A stock or token, e.g. SNAP or $MEME"
+            autoComplete="off"
+            spellCheck={false}
+            className="w-full border border-foreground bg-surface px-3 py-2.5 pr-10 text-base outline-none placeholder:text-muted focus-visible:ring-2 focus-visible:ring-acid [&::-webkit-search-cancel-button]:hidden"
+          />
+          {query ? (
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                searchBox.current?.focus();
+              }}
+              aria-label="Clear search"
+              className="absolute inset-y-0 right-0 cursor-pointer px-3 text-muted hover:text-foreground"
+            >
+              ✕
+            </button>
+          ) : (
+            <kbd
+              aria-hidden="true"
+              className="pointer-events-none absolute top-1/2 right-3 hidden -translate-y-1/2 border border-border px-1.5 font-mono text-[11px] text-muted sm:block"
+            >
+              /
+            </kbd>
+          )}
+        </div>
+      </div>
+
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="flex flex-wrap gap-3">
           <FilterGroup
@@ -185,13 +274,12 @@ export default function PairsTable({
             {visible.length === 0 && (
               <tr className="border-t border-border">
                 <td colSpan={10} className="px-3 py-10 text-center text-muted">
-                  No pairs match these filters.{" "}
+                  {query.trim()
+                    ? `No pairs match “${query.trim()}”.`
+                    : "No pairs match these filters."}{" "}
                   <button
                     type="button"
-                    onClick={() => {
-                      setChain("all");
-                      setKind("all");
-                    }}
+                    onClick={showAll}
                     className="cursor-pointer underline hover:text-foreground"
                   >
                     Show all
