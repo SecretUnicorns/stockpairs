@@ -17,6 +17,7 @@ import {
   formatPrice,
   formatUsd,
 } from "@/lib/format";
+import Ticker from "@/app/ticker";
 
 const HOUR = 60 * 60;
 
@@ -197,7 +198,9 @@ export default function PriceChart({
       }
     >
       {expanded && (
-        <p className="text-2xl font-extrabold tracking-tight">${symbol}</p>
+        <p className="text-2xl font-extrabold tracking-tight">
+          <Ticker symbol={symbol} />
+        </p>
       )}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-3">
