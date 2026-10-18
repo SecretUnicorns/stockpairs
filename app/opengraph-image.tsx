@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { OG_SIZE, ogColors as c, ogFonts } from "@/lib/og";
-import { pairs } from "@/lib/pairs";
+import { chainLabels, chainRank, pairs } from "@/lib/pairs";
 
 export const alt =
   "stockpairs — live board of meme coins paired with tokenized stocks and crypto";
@@ -10,8 +10,14 @@ export const contentType = "image/png";
 export default async function Image() {
   const stamp = "LIVE BOARD";
   const title = "stockpairs";
-  const tagline = "Meme coins paired with tokenized stocks and crypto.";
-  const footer = `${pairs.length} PAIRS · SOLANA · ROBINHOOD CHAIN · A CHUBBICORNS PROJECT`;
+  const tagline = "Stock pairs on Robinhood Chain, plus Solana.";
+  // Robinhood Chain first, like everywhere else on the site.
+  const chains = [...new Set(pairs.map((pair) => pair.chain))]
+    .sort((a, b) => chainRank[a] - chainRank[b])
+    .map((chain) => chainLabels[chain]);
+  const footer = [`${pairs.length} pairs`, ...chains, "A Chubbicorns project"]
+    .join(" · ")
+    .toUpperCase();
   const fonts = await ogFonts(stamp + title + tagline + footer);
 
   return new ImageResponse(

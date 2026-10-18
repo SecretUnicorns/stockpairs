@@ -2,10 +2,14 @@ import pairsData from "@/data/pairs.json";
 
 export type Chain = "solana" | "robinhood";
 
+/** Robinhood Chain is the focus, so it's listed first everywhere. */
 export const chainLabels: Record<Chain, string> = {
-  solana: "Solana",
   robinhood: "Robinhood Chain",
+  solana: "Solana",
 };
+
+/** Lower comes first: Robinhood pairs lead the board by default. */
+export const chainRank: Record<Chain, number> = { robinhood: 0, solana: 1 };
 
 /**
  * What the paired asset actually is on-chain. Every pair trades against a

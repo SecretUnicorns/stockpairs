@@ -15,23 +15,23 @@ Each pair is one entry in [`data/pairs.json`](data/pairs.json):
 
 ```json
 {
-  "chain": "solana",
+  "chain": "robinhood",
   "token": {
-    "symbol": "KNOTS",
-    "address": "8RVBk8vxLiUHueLUW1f4izFVqN3nWippLhkohKg6EGkS"
+    "symbol": "NUDES",
+    "address": "0xbe98b75361935b18d688409424a869a4C3dC7401"
   },
   "pairedWith": {
-    "symbol": "STONK",
-    "name": "StonkFun",
-    "kind": "crypto-token",
-    "address": "6GmAFSYs4gk3FDao5FzzySQpPZaWsa4rUJHacpMpUNgx"
+    "symbol": "SNAP",
+    "name": "Snap",
+    "kind": "tokenized-stock",
+    "address": "0xF6589F11Bc40b669e584073F428B05562F568733"
   },
-  "dexscreenerUrl": "https://dexscreener.com/solana/buvzslllg7gwoyjvou31pxibveaza6gxtavz9vd3cws9"
+  "dexscreenerUrl": "https://dexscreener.com/robinhood/0x383957bce2341f59ff97c47eda2ad3b3b839b7050adc8a4747a398abca0ad552"
 }
 ```
 
-- `chain`: `solana` or `robinhood`.
-- `token`: the meme coin. `symbol` has no `$`, and must be unique — it becomes the page address (`/pairs/knots`).
+- `chain`: `robinhood` or `solana`. Robinhood Chain is the focus and is listed first.
+- `token`: the meme coin. `symbol` has no `$`, and must be unique — it becomes the page address (`/pairs/nudes`).
 - `pairedWith.kind`: what the pool trades against:
   - `tokenized-stock` — a token that tracks a share price (e.g. SNAP)
   - `bridged-crypto` — a token backed by a coin on another chain (e.g. ZEC)
