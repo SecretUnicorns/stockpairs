@@ -11,11 +11,34 @@ export const SITE_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
 export const isProduction = process.env.VERCEL_ENV === "production";
 
 /**
- * Where people ask to get a token listed or report a mistake: a DM link set
- * as the CONTACT_URL environment variable on Vercel, not in the code, so a
- * personal handle never ends up in the repo. Only https links are used; if
- * it isn't set, the contact links are simply not shown.
+ * Where people ask to get a token listed or report a mistake. Set as the
+ * CONTACT_URL environment variable on Vercel, not in the code, so a personal
+ * address never ends up in the repo. Accepts an email address
+ * ("listings@example.com" or "mailto:…") or an https link (e.g. a DM link).
+ * Anything else, or nothing, hides the contact links.
  */
-export const CONTACT_URL = process.env.CONTACT_URL?.startsWith("https://")
-  ? process.env.CONTACT_URL
-  : null;
+export type Contact = {
+  href: string;
+  /** The email address, shown as text so people can copy it. */
+  email: string | null;
+};
+
+function readContact(value: string | undefined): Contact | null {
+  const raw = value?.trim();
+  if (!raw) return null;
+  if (raw.startsWith("https://")) return { href: raw, email: null };
+  const email = raw.replace(/^mailto:/, "");
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { href: `mailto:${email}`, email };
+  }
+  return null;
+}
+
+export const CONTACT = readContact(process.env.CONTACT_URL);
+
+/** Link attributes: web links open in a new tab, email links don't. */
+export function contactLinkProps(contact: Contact) {
+  return contact.email
+    ? { href: contact.href }
+    : { href: contact.href, target: "_blank", rel: "noopener noreferrer" };
+}

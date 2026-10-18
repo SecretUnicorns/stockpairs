@@ -21,7 +21,7 @@ import {
   pairs,
   pairSlug,
 } from "@/lib/pairs";
-import { CONTACT_URL } from "@/lib/site";
+import { CONTACT, contactLinkProps } from "@/lib/site";
 import Ticker from "@/app/ticker";
 
 // Only the pairs in data/pairs.json have pages; anything else is a 404.
@@ -264,13 +264,11 @@ export default async function PairPage({ params }: PageProps<"/pairs/[slug]">) {
         </Section>
       </div>
 
-      {CONTACT_URL && (
+      {CONTACT && (
         <p className="border-t border-foreground pt-4 text-sm text-muted">
           Something wrong or out of date on this page?{" "}
           <a
-            href={CONTACT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            {...contactLinkProps(CONTACT)}
             className="font-semibold text-foreground underline hover:text-orange"
           >
             Let us know ↗
