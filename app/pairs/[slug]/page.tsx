@@ -22,6 +22,7 @@ import {
   pairSlug,
 } from "@/lib/pairs";
 import { correctionUrl } from "@/lib/site";
+import Ticker from "@/app/ticker";
 
 // Only the pairs in data/pairs.json have pages; anything else is a 404.
 export const dynamicParams = false;
@@ -145,13 +146,13 @@ export default async function PairPage({ params }: PageProps<"/pairs/[slug]">) {
             />
           )}
           <h1 className="text-5xl font-extrabold tracking-tighter sm:text-7xl">
-            ${token.symbol}
+            <Ticker symbol={token.symbol} />
           </h1>
         </div>
         <p className="max-w-xl text-lg text-muted">
           A meme coin paired with{" "}
           <span className="font-semibold text-foreground">
-            ${pairedWith.symbol}
+            <Ticker symbol={pairedWith.symbol} />
           </span>
           , a {pairedKindLabels[pairedWith.kind]} for {pairedWith.name}.
         </p>
@@ -218,7 +219,7 @@ export default async function PairPage({ params }: PageProps<"/pairs/[slug]">) {
         <Section number="01" title="What it's paired with">
           <p>{pairedExplainer(pair)}</p>
           <p className="flex flex-wrap items-center gap-2 text-sm text-muted">
-            ${pairedWith.symbol} contract:
+            <Ticker symbol={pairedWith.symbol} /> contract:
             <CopyAddress address={pairedWith.address} />
           </p>
         </Section>

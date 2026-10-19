@@ -112,8 +112,18 @@ export default async function Image({
               alt=""
             />
           )}
-          <div style={{ fontSize: 150, letterSpacing: -6, lineHeight: 1 }}>
-            {`$${pair.token.symbol}`}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              fontSize: 150,
+              letterSpacing: -6,
+              lineHeight: 1,
+            }}
+          >
+            {/* Same 115% "$" as the Ticker component on the site. */}
+            <span style={{ fontSize: 150 * 1.15 }}>$</span>
+            {pair.token.symbol}
           </div>
         </div>
         <div style={{ fontSize: 34, color: c.muted }}>{subtitle}</div>

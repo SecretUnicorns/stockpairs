@@ -22,6 +22,7 @@ import {
   pairedKindLabels,
   pairSlug,
 } from "@/lib/pairs";
+import Ticker from "@/app/ticker";
 
 export type Row = {
   pair: Pair;
@@ -321,7 +322,7 @@ function PairRow({ row, now }: { row: Row; now: number }) {
               href={`/pairs/${pairSlug(pair)}`}
               className="font-semibold underline decoration-border underline-offset-4 hover:decoration-foreground"
             >
-              ${pair.token.symbol}
+              <Ticker symbol={pair.token.symbol} />
             </Link>
             <CopyAddress address={pair.token.address} />
           </div>
@@ -353,7 +354,9 @@ function PairRow({ row, now }: { row: Row; now: number }) {
       <td className="min-w-48 px-3 py-3">
         <div className="flex flex-col items-start gap-0.5">
           <span>
-            <span className="font-semibold">${pair.pairedWith.symbol}</span>{" "}
+            <span className="font-semibold">
+              <Ticker symbol={pair.pairedWith.symbol} />
+            </span>{" "}
             <span className="text-muted">
               · {pairedKindLabels[pair.pairedWith.kind]} for{" "}
               {pair.pairedWith.name}
