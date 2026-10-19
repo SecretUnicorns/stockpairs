@@ -1,32 +1,52 @@
 /**
  * The disclaimer itself. Rendered in the footer and inside the gate that new
- * visitors have to agree to, so the two can never drift apart.
+ * visitors have to agree to, so the two can never drift apart. Each point
+ * opens with a short bold label so it can be skimmed.
  */
 export default function DisclaimerText() {
   return (
     <>
       <p>
-        stockpairs is for informational purposes only and is not financial
-        advice. We are not financial advisors. Listing a token or stock here is
-        not an endorsement, recommendation, or suggestion to buy, sell, or hold
-        it. We did not create, launch, or issue any of the tokens listed, and we
-        are not affiliated with any of them or their projects.
+        <strong>Not financial advice.</strong> stockpairs is an information
+        site. We are not financial advisors, and nothing here tells you to buy,
+        sell, or hold anything. A pair being listed is not an endorsement.
       </p>
       <p>
-        Token and stock pairings and contract addresses may be inaccurate or out
-        of date, and any token may be a scam or a honeypot (a token you can buy
-        but can&apos;t sell). Always verify the contract address and do your own
-        research before you trade.
+        <strong>We don&apos;t run these tokens.</strong> We did not create,
+        launch, or issue any token on this site, and we are not affiliated with
+        their projects. Pairs suggested by the community are checked by hand,
+        but that is not a safety guarantee.
       </p>
       <p>
-        We are not responsible for how any token, or the stock or crypto it is
-        paired with, moves in price. Tokenized stocks can trade far above or
-        below the real stock, and liquidity can disappear at any time.
+        <strong>The data can be wrong.</strong> Prices, charts, and pool details
+        come from third parties and can be delayed, inaccurate, or out of date,
+        and so can our pairings and contract addresses. Copycat tokens reuse
+        popular names: always check the contract address yourself before you
+        trade.
       </p>
       <p>
-        We are not responsible for any losses, including losses from honeypots,
-        scams, rug pulls, or incorrect information on this site. Crypto and
-        tokenized stocks are highly risky — use this site at your own risk.
+        <strong>Tokenized stocks are not stocks.</strong> They track a share
+        price but give you no ownership or voting rights, and they can trade far
+        above or below the real stock — especially while the stock market is
+        closed.
+      </p>
+      <p>
+        <strong>Meme coins are extremely risky.</strong> Any token can be a
+        scam, a rug pull, or a honeypot (one you can buy but can&apos;t sell),
+        and the liquidity in a pool can disappear at any time. Only trade what
+        you can afford to lose completely.
+      </p>
+      <p>
+        <strong>Third parties are separate.</strong> We are not affiliated with
+        DexScreener, GeckoTerminal, TradingView, Robinhood, Robinhood Chain,
+        Solana, or any other site, exchange, chain, or service linked from or
+        named on this site. Links are there for convenience — we don&apos;t
+        control those sites and aren&apos;t responsible for their content.
+      </p>
+      <p>
+        <strong>Use at your own risk.</strong> We are not responsible for any
+        losses, including from scams, rug pulls, honeypots, price moves, or
+        incorrect information on this site.
       </p>
     </>
   );

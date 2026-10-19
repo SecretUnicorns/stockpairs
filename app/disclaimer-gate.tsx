@@ -77,10 +77,11 @@ export default function DisclaimerGate({
           id="disclaimer-gate-title"
           className="mb-1 text-2xl font-extrabold tracking-tight"
         >
-          Before you use stockpairs
+          Quick heads-up first
         </h2>
         <p className="mb-3 text-sm">
-          Read the disclaimer below, then agree to continue.
+          stockpairs tracks risky assets. Read these seven short points, then
+          tick the box to see the board.
         </p>
         <div
           ref={scrollRef}
@@ -105,8 +106,9 @@ export default function DisclaimerGate({
             className="mt-1"
           />
           <span>
-            I have read and agree to the disclaimer
-            {!scrolledToEnd && " (scroll to the end first)"}
+            I&apos;ve read this, I understand stockpairs isn&apos;t financial
+            advice, and I&apos;m using it at my own risk.
+            {!scrolledToEnd && " (Scroll to the end first.)"}
           </span>
         </label>
         <button
@@ -115,7 +117,7 @@ export default function DisclaimerGate({
           disabled={!checked}
           className="mt-3 w-full cursor-pointer border border-foreground bg-acid px-3 py-3 font-mono text-sm font-semibold text-acid-ink transition enabled:hover:-translate-y-0.5 enabled:hover:bg-orange disabled:cursor-not-allowed disabled:opacity-30"
         >
-          I agree
+          Show me the board
         </button>
       </div>
     </div>
