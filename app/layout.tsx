@@ -3,7 +3,7 @@ import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import DisclaimerGate from "@/app/disclaimer-gate";
 import DisclaimerText from "@/app/disclaimer-text";
-import { SITE_URL } from "@/lib/site";
+import { CONTACT, contactLinkProps, SITE_URL } from "@/lib/site";
 
 const archivo = Archivo({
   variable: "--font-archivo",
@@ -41,6 +41,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {children}
         <footer className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 pt-4 pb-10 text-xs text-muted">
           <DisclaimerText />
+          {CONTACT && (
+            <p className="mt-2">
+              Want your token listed, or spotted a mistake?{" "}
+              {CONTACT.email && "Email "}
+              <a
+                {...contactLinkProps(CONTACT)}
+                className="font-semibold text-foreground underline hover:text-orange"
+              >
+                {CONTACT.email ?? "Contact us ↗"}
+              </a>
+            </p>
+          )}
           <p className="mt-2 font-mono tracking-widest uppercase">
             A{" "}
             <a
