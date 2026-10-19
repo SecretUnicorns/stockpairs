@@ -41,8 +41,8 @@ export default async function Home() {
           stockpairs
         </h1>
         <p className="max-w-xl text-muted">
-          Meme coins paired with tokenized stocks and crypto, live from
-          DexScreener.
+          Meme coins paired with tokenized stocks on Robinhood Chain, plus
+          Solana. Live from DexScreener.
         </p>
         <a
           href={suggestPairUrl}

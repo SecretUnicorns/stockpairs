@@ -17,6 +17,7 @@ import {
 import {
   type Chain,
   chainLabels,
+  chainRank,
   type Pair,
   type PairedKind,
   pairedKindLabels,
@@ -54,8 +55,14 @@ const sortableColumns: { key: SortKey; label: string }[] = [
 
 // The table only has room for the short name; filters keep the full one.
 const chainTags: Record<Chain, string> = {
-  solana: "Solana",
   robinhood: "Robinhood",
+  solana: "Solana",
+};
+
+// Robinhood Chain is the focus, so its tag gets the accent colour.
+const chainTagStyles: Record<Chain, string> = {
+  robinhood: "bg-acid text-acid-ink",
+  solana: "bg-soft",
 };
 
 function sortValue(row: Row, key: SortKey): string | number | null {
@@ -122,13 +129,24 @@ export default function PairsTable({
   now: number;
 }) {
   const [sortKey, setSortKey] = useState<SortKey>("marketCap");
+  // Until someone picks a column, Robinhood Chain pairs lead the board.
+  const [userSorted, setUserSorted] = useState(false);
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const [chain, setChain] = useState<Chain | "all">("all");
   const [kind, setKind] = useState<PairedKind | "all">("all");
   const [query, setQuery] = useState("");
   const searchBox = useRef<HTMLInputElement>(null);
 
-  const visible = sortRows(
+  // Only offer filters that can narrow the board: one chain or one kind of
+  // pair means there's nothing to choose between.
+  const chainOptions = [...new Set(rows.map(({ pair }) => pair.chain))];
+  const kindOptions = [
+    ...new Set(rows.map(({ pair }) => pair.pairedWith.kind)),
+  ];
+  // Same for the Chain column: with one chain it says the same on every row.
+  const showChain = chainOptions.length > 1;
+
+  const sorted = sortRows(
     rows.filter(
       ({ pair }) =>
         (chain === "all" || pair.chain === chain) &&
@@ -138,6 +156,12 @@ export default function PairsTable({
     sortKey,
     sortDir,
   );
+  // Sorting is stable, so each chain keeps its market cap order.
+  const visible = userSorted
+    ? sorted
+    : [...sorted].sort(
+        (a, b) => chainRank[a.pair.chain] - chainRank[b.pair.chain],
+      );
 
   // Press "/" anywhere on the board to jump to the search box.
   useEffect(() => {
@@ -161,6 +185,7 @@ export default function PairsTable({
   }
 
   function sortBy(key: SortKey) {
+    setUserSorted(true);
     if (key === sortKey) {
       setSortDir(sortDir === "asc" ? "desc" : "asc");
     } else {
@@ -219,18 +244,22 @@ export default function PairsTable({
 
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="flex flex-wrap gap-3">
-          <FilterGroup
-            label="Chain"
-            value={chain}
-            options={chainLabels}
-            onChange={setChain}
-          />
-          <FilterGroup
-            label="Paired with"
-            value={kind}
-            options={pairedKindLabels}
-            onChange={setKind}
-          />
+          {chainOptions.length > 1 && (
+            <FilterGroup
+              label="Chain"
+              value={chain}
+              options={pick(chainLabels, chainOptions)}
+              onChange={setChain}
+            />
+          )}
+          {kindOptions.length > 1 && (
+            <FilterGroup
+              label="Paired with"
+              value={kind}
+              options={pick(pairedKindLabels, kindOptions)}
+              onChange={setKind}
+            />
+          )}
         </div>
         <p
           aria-live="polite"
@@ -261,7 +290,7 @@ export default function PairsTable({
                 />
               ))}
               <th className="px-3 py-3 font-medium">Paired with</th>
-              <th className="px-3 py-3 font-medium">Chain</th>
+              {showChain && <th className="px-3 py-3 font-medium">Chain</th>}
             </tr>
           </thead>
           <tbody>
@@ -270,11 +299,15 @@ export default function PairsTable({
                 key={`${row.pair.chain}:${row.pair.token.address}`}
                 row={row}
                 now={now}
+                showChain={showChain}
               />
             ))}
             {visible.length === 0 && (
               <tr className="border-t border-border">
-                <td colSpan={10} className="px-3 py-10 text-center text-muted">
+                <td
+                  colSpan={showChain ? 10 : 9}
+                  className="px-3 py-10 text-center text-muted"
+                >
                   {query.trim()
                     ? `No pairs match “${query.trim()}”.`
                     : "No pairs match these filters."}{" "}
@@ -338,6 +371,18 @@ function SortHeader({
   );
 }
 
+/** The entries of `labels` for the given keys, in the labels' order. */
+function pick<T extends string>(
+  labels: Record<T, string>,
+  keys: T[],
+): Partial<Record<T, string>> {
+  return Object.fromEntries(
+    (Object.keys(labels) as T[])
+      .filter((key) => keys.includes(key))
+      .map((key) => [key, labels[key]]),
+  ) as Partial<Record<T, string>>;
+}
+
 /** A row of toggle buttons: "All" plus one per option. */
 function FilterGroup<T extends string>({
   label,
@@ -347,7 +392,7 @@ function FilterGroup<T extends string>({
 }: {
   label: string;
   value: T | "all";
-  options: Record<T, string>;
+  options: Partial<Record<T, string>>;
   onChange: (value: T | "all") => void;
 }) {
   const choices: [T | "all", string][] = [
@@ -382,7 +427,15 @@ function FilterGroup<T extends string>({
  */
 const stickyCell = "sticky left-0 z-10 max-sm:border-r max-sm:border-border";
 
-function PairRow({ row, now }: { row: Row; now: number }) {
+function PairRow({
+  row,
+  now,
+  showChain,
+}: {
+  row: Row;
+  now: number;
+  showChain: boolean;
+}) {
   const { pair, market, trend } = row;
   const change = market?.priceChange24h ?? null;
   return (
@@ -453,11 +506,15 @@ function PairRow({ row, now }: { row: Row; now: number }) {
           <CopyAddress address={pair.pairedWith.address} />
         </div>
       </td>
-      <td className="px-3 py-3">
-        <span className="bg-soft px-2 py-1 font-mono text-[11px] tracking-wider whitespace-nowrap uppercase">
-          {chainTags[pair.chain]}
-        </span>
-      </td>
+      {showChain && (
+        <td className="px-3 py-3">
+          <span
+            className={`px-2 py-1 font-mono text-[11px] tracking-wider whitespace-nowrap uppercase ${chainTagStyles[pair.chain]}`}
+          >
+            {chainTags[pair.chain]}
+          </span>
+        </td>
+      )}
     </tr>
   );
 }

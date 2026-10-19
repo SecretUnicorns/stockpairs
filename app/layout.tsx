@@ -17,7 +17,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 const description =
-  "Live board of meme coins paired with tokenized stocks and crypto on Solana and Robinhood Chain.";
+  "The stock pairs dashboard for Robinhood Chain, plus Solana: find the meme coin paired with a tokenized stock, with live prices, charts and the risks in plain English.";
 
 export const metadata: Metadata = {
   // Lets pages use relative links ("/pairs/knots") in share and SEO tags.
