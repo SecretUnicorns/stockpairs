@@ -39,9 +39,10 @@ export default function DisclaimerText() {
       <p>
         <strong>Third parties are separate.</strong> We are not affiliated with
         DexScreener, GeckoTerminal, TradingView, GitHub, Robinhood, Robinhood
-        Chain, or any other site, exchange, chain, or service linked from or
-        named on this site. Links are there for convenience — we don&apos;t
-        control those sites and aren&apos;t responsible for their content.
+        Chain, Solana, or any other site, exchange, chain, or service linked
+        from or named on this site. Links are there for convenience — we
+        don&apos;t control those sites and aren&apos;t responsible for their
+        content.
       </p>
       <p>
         <strong>Use at your own risk.</strong> We are not responsible for any
