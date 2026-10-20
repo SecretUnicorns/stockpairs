@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Archivo, IBM_Plex_Mono } from "next/font/google";
+import Image from "next/image";
 import "./globals.css";
 import DisclaimerGate from "@/app/disclaimer-gate";
 import DisclaimerText from "@/app/disclaimer-text";
 import { CONTACT, contactLinkProps, SITE_URL } from "@/lib/site";
+import chubbicorn from "@/public/brand/chubbicorn.png";
 
 const archivo = Archivo({
   variable: "--font-archivo",
@@ -53,17 +55,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               </a>
             </p>
           )}
-          <p className="mt-2 font-mono tracking-widest uppercase">
-            A{" "}
-            <a
-              href="https://www.chubbicorns.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-foreground"
-            >
-              Chubbicorns
-            </a>{" "}
-            project 🦄
+          <p className="mt-2 flex items-center gap-2 font-mono tracking-widest uppercase">
+            <Image src={chubbicorn} alt="" className="h-7 w-auto" />
+            <span>
+              A{" "}
+              <a
+                href="https://www.chubbicorns.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-foreground"
+              >
+                Chubbicorns
+              </a>{" "}
+              project
+            </span>
           </p>
         </footer>
         <DisclaimerGate>

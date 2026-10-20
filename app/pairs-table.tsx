@@ -24,6 +24,7 @@ import {
   pairSlug,
 } from "@/lib/pairs";
 import Ticker from "@/app/ticker";
+import CodingChubbicorn from "@/app/coding-chubbicorn";
 
 export type Row = {
   pair: Pair;
@@ -308,6 +309,7 @@ export default function PairsTable({
                   colSpan={showChain ? 10 : 9}
                   className="px-3 py-10 text-center text-muted"
                 >
+                  <CodingChubbicorn className="mx-auto mb-3 size-24" />
                   {query.trim()
                     ? `No pairs match “${query.trim()}”.`
                     : "No pairs match these filters."}{" "}
