@@ -4,7 +4,19 @@
  * contact Google or DexScreener.
  */
 
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
 export const OG_SIZE = { width: 1200, height: 630 };
+
+/** Cin's "Stock Pairs" wordmark (black on transparent), 1200x123. */
+export const WORDMARK = {
+  src: `data:image/png;base64,${await readFile(
+    join(process.cwd(), "public/brand/wordmark.png"),
+    "base64",
+  )}`,
+  ratio: 1200 / 123,
+};
 
 /**
  * Every download for a share image gives up after this long. Images are

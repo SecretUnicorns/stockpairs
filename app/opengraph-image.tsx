@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { OG_SIZE, ogColors as c, ogFonts } from "@/lib/og";
+import { OG_SIZE, ogColors as c, ogFonts, WORDMARK } from "@/lib/og";
 import { chainLabels, chainRank, pairs } from "@/lib/pairs";
 
 export const alt =
@@ -9,7 +9,7 @@ export const contentType = "image/png";
 
 export default async function Image() {
   const stamp = "LIVE BOARD";
-  const title = "stockpairs";
+  const title = "Stock Pairs";
   const tagline = "Stock pairs on Robinhood Chain, plus Solana.";
   // Robinhood Chain first, like everywhere else on the site.
   const chains = [...new Set(pairs.map((pair) => pair.chain))]
@@ -18,7 +18,7 @@ export default async function Image() {
   const footer = [`${pairs.length} pairs`, ...chains, "A Chubbicorns project"]
     .join(" · ")
     .toUpperCase();
-  const fonts = await ogFonts(stamp + title + tagline + footer);
+  const fonts = await ogFonts(stamp + tagline + footer);
 
   return new ImageResponse(
     <div
@@ -48,9 +48,12 @@ export default async function Image() {
         {stamp}
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-        <div style={{ fontSize: 190, letterSpacing: -9, lineHeight: 1 }}>
-          {title}
-        </div>
+        <img
+          src={WORDMARK.src}
+          alt={title}
+          width={1000}
+          height={Math.round(1000 / WORDMARK.ratio)}
+        />
         <div style={{ fontSize: 38, color: c.muted }}>{tagline}</div>
       </div>
       <div

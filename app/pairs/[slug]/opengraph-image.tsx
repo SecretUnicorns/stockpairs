@@ -1,7 +1,13 @@
 import { ImageResponse } from "next/og";
 import { getMarketData } from "@/lib/dexscreener";
 import { formatPercent, formatPrice, formatUsd } from "@/lib/format";
-import { OG_FETCH_TIMEOUT_MS, OG_SIZE, ogColors as c, ogFonts } from "@/lib/og";
+import {
+  OG_FETCH_TIMEOUT_MS,
+  OG_SIZE,
+  ogColors as c,
+  ogFonts,
+  WORDMARK,
+} from "@/lib/og";
 import {
   chainLabels,
   findPair,
@@ -48,7 +54,7 @@ export default async function Image({
   const logo = await logoDataUrl(market?.imageUrl ?? null);
   const change = market?.priceChange24h ?? null;
 
-  const stamp = ["stockpairs", chainLabels[pair.chain], market?.dex]
+  const stamp = [chainLabels[pair.chain], market?.dex]
     .filter(Boolean)
     .join(" · ")
     .toUpperCase();
@@ -97,7 +103,13 @@ export default async function Image({
           letterSpacing: 3,
         }}
       >
-        <div style={{ width: 18, height: 18, background: c.acid }} />
+        <img
+          src={WORDMARK.src}
+          alt="Stock Pairs"
+          width={300}
+          height={Math.round(300 / WORDMARK.ratio)}
+        />
+        <div style={{ width: 14, height: 14, background: c.acid }} />
         {stamp}
       </div>
 

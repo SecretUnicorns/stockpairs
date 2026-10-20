@@ -23,6 +23,7 @@ import {
 } from "@/lib/pairs";
 import { CONTACT, contactLinkProps } from "@/lib/site";
 import Ticker from "@/app/ticker";
+import wordmark from "@/public/brand/wordmark.png";
 
 // Only the pairs in data/pairs.json have pages; anything else is a 404.
 export const dynamicParams = false;
@@ -121,12 +122,21 @@ export default async function PairPage({ params }: PageProps<"/pairs/[slug]">) {
 
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-10 px-4 pt-12 pb-6">
-      <Link
-        href="/"
-        className="self-start font-mono text-xs font-semibold tracking-widest text-muted uppercase hover:text-foreground"
-      >
-        ← All pairs
-      </Link>
+      <nav className="flex items-center justify-between gap-4">
+        <Link href="/" aria-label="Stock Pairs home">
+          <Image
+            src={wordmark}
+            alt="Stock Pairs"
+            className="h-6 w-auto dark:invert"
+          />
+        </Link>
+        <Link
+          href="/"
+          className="font-mono text-xs font-semibold tracking-widest text-muted uppercase hover:text-foreground"
+        >
+          ← All pairs
+        </Link>
+      </nav>
 
       <header className="flex flex-col gap-4">
         <span className="inline-flex items-center gap-2 font-mono text-xs font-semibold tracking-widest uppercase">
