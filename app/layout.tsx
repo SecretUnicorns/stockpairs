@@ -6,6 +6,7 @@ import DisclaimerGate from "@/app/disclaimer-gate";
 import DisclaimerText from "@/app/disclaimer-text";
 import { CONTACT, contactLinkProps, SITE_URL } from "@/lib/site";
 import chubbicorn from "@/public/brand/chubbicorn.png";
+import { SITE_NAME } from "@/lib/brand";
 
 const archivo = Archivo({
   variable: "--font-archivo",
@@ -24,12 +25,12 @@ const description =
 export const metadata: Metadata = {
   // Lets pages use relative links ("/pairs/knots") in share and SEO tags.
   metadataBase: new URL(SITE_URL),
-  title: "stockpairs",
+  title: SITE_NAME,
   description,
   openGraph: {
-    siteName: "stockpairs",
+    siteName: SITE_NAME,
     type: "website",
-    title: "stockpairs",
+    title: SITE_NAME,
     description,
   },
   // Big image previews on X instead of a small square.

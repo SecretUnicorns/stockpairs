@@ -1,3 +1,5 @@
+import { SITE_NAME } from "@/lib/brand";
+
 /**
  * The disclaimer itself. Rendered in the footer and inside the gate that new
  * visitors have to agree to, so the two can never drift apart. Each point
@@ -7,7 +9,7 @@ export default function DisclaimerText() {
   return (
     <>
       <p>
-        <strong>Not financial advice.</strong> stockpairs is an information
+        <strong>Not financial advice.</strong> {SITE_NAME} is an information
         site. We are not financial advisors, and nothing here tells you to buy,
         sell, or hold anything. A pair being listed is not an endorsement.
       </p>
