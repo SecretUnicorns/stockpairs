@@ -1,15 +1,15 @@
 import { ImageResponse } from "next/og";
 import { OG_SIZE, ogColors as c, ogFonts, WORDMARK } from "@/lib/og";
 import { chainLabels, chainRank, pairs } from "@/lib/pairs";
+import { SITE_NAME } from "@/lib/brand";
 
-export const alt =
-  "stockpairs — live board of meme coins paired with tokenized stocks and crypto";
+export const alt = `${SITE_NAME} — live board of meme coins paired with tokenized stocks and crypto`;
 export const size = OG_SIZE;
 export const contentType = "image/png";
 
 export default async function Image() {
   const stamp = "LIVE BOARD";
-  const title = "Stock Pairs";
+  const title = SITE_NAME;
   const tagline = "Stock pairs on Robinhood Chain, plus Solana.";
   // Robinhood Chain first, like everywhere else on the site.
   const chains = [...new Set(pairs.map((pair) => pair.chain))]

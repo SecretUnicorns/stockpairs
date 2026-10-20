@@ -24,6 +24,7 @@ import {
 import { CONTACT, contactLinkProps } from "@/lib/site";
 import Ticker from "@/app/ticker";
 import wordmark from "@/public/brand/wordmark.png";
+import { SITE_NAME } from "@/lib/brand";
 
 // Only the pairs in data/pairs.json have pages; anything else is a 404.
 export const dynamicParams = false;
@@ -37,7 +38,7 @@ export async function generateMetadata({
 }: PageProps<"/pairs/[slug]">): Promise<Metadata> {
   const pair = findPair((await params).slug);
   if (!pair) return {};
-  const title = `$${pair.token.symbol} / $${pair.pairedWith.symbol} — stockpairs`;
+  const title = `$${pair.token.symbol} / $${pair.pairedWith.symbol} — ${SITE_NAME}`;
   const description = `$${pair.token.symbol} is a meme coin on ${chainLabels[pair.chain]} paired with $${pair.pairedWith.symbol}, a ${pairedKindLabels[pair.pairedWith.kind]} for ${pair.pairedWith.name}. Live price, liquidity, how the pairing works, and the risks.`;
   const url = `/pairs/${pairSlug(pair)}`;
   return {
@@ -46,7 +47,7 @@ export async function generateMetadata({
     alternates: { canonical: url },
     // Replaces the layout's openGraph, so repeat the site-wide fields.
     openGraph: {
-      siteName: "stockpairs",
+      siteName: SITE_NAME,
       type: "website",
       title,
       description,

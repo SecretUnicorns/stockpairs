@@ -1,6 +1,6 @@
-# Contributing to stockpairs
+# Contributing to Stock Pairs
 
-stockpairs is a dashboard of meme coins paired with tokenized stocks and crypto tokens. The team decides by hand what gets listed, and we don't list rugs.
+Stock Pairs is a dashboard of meme coins paired with tokenized stocks and crypto tokens. The team decides by hand what gets listed, and we don't list rugs.
 
 ## Get a token listed or report a mistake
 

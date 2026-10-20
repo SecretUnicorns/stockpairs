@@ -15,8 +15,9 @@ import {
   pairs,
   pairSlug,
 } from "@/lib/pairs";
+import { SITE_NAME } from "@/lib/brand";
 
-export const alt = "Live stats for this stockpairs pair";
+export const alt = `Live stats for this ${SITE_NAME} pair`;
 export const size = OG_SIZE;
 export const contentType = "image/png";
 

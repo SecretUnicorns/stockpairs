@@ -2,6 +2,7 @@
 
 import { useCallback, useState, useSyncExternalStore } from "react";
 import { DISCLAIMER_VERSION } from "@/lib/disclaimer";
+import { SITE_NAME } from "@/lib/brand";
 
 const KEY = "stockpairs:disclaimer";
 // Ask again after 30 days, or immediately when DISCLAIMER_VERSION changes.
@@ -80,7 +81,7 @@ export default function DisclaimerGate({
           Quick heads-up first
         </h2>
         <p className="mb-3 text-sm">
-          stockpairs tracks risky assets. Read these seven short points, then
+          {SITE_NAME} tracks risky assets. Read these seven short points, then
           tick the box to see the board.
         </p>
         <div
@@ -106,7 +107,7 @@ export default function DisclaimerGate({
             className="mt-1"
           />
           <span>
-            I&apos;ve read this, I understand stockpairs isn&apos;t financial
+            I&apos;ve read this, I understand {SITE_NAME} isn&apos;t financial
             advice, and I&apos;m using it at my own risk.
             {!scrolledToEnd && " (Scroll to the end first.)"}
           </span>
