@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import PairsTable from "@/app/pairs-table";
 import { weekTrend } from "@/lib/candles";
 import { getMarketData } from "@/lib/dexscreener";
 import { getHourlyCandles } from "@/lib/geckoterminal";
 import { pairs } from "@/lib/pairs";
 import { CONTACT, contactLinkProps } from "@/lib/site";
+import wordmark from "@/public/brand/wordmark.png";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -37,8 +39,13 @@ export default async function Home() {
           <span aria-hidden="true" className="size-2 bg-acid" />
           Live board
         </span>
-        <h1 className="text-5xl font-extrabold tracking-tighter sm:text-7xl">
-          stockpairs
+        <h1>
+          <Image
+            src={wordmark}
+            alt="Stock Pairs"
+            preload
+            className="h-10 w-auto sm:h-14 dark:invert"
+          />
         </h1>
         <p className="max-w-xl text-muted">
           Meme coins paired with tokenized stocks on Robinhood Chain, plus
