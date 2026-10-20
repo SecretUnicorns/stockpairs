@@ -4,7 +4,7 @@ import Image from "next/image";
 import "./globals.css";
 import DisclaimerGate from "@/app/disclaimer-gate";
 import DisclaimerText from "@/app/disclaimer-text";
-import { CONTACT, contactLinkProps, SITE_URL } from "@/lib/site";
+import { CONTACT, contactLinkProps, SITE_URL, STORE_URL } from "@/lib/site";
 import chubbicorn from "@/public/brand/chubbicorn.png";
 import { SITE_NAME } from "@/lib/brand";
 
@@ -43,6 +43,21 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-screen flex-col font-sans antialiased">
         {children}
         <footer className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 pt-4 pb-10 text-xs text-muted">
+          <aside className="mb-4 flex flex-wrap items-center gap-4 border border-foreground bg-surface p-4 text-sm text-foreground">
+            <Image src={chubbicorn} alt="" className="h-14 w-auto shrink-0" />
+            <p className="min-w-48 flex-1">
+              <span className="font-semibold">Like the unicorn?</span> Get
+              Chubbicorns tees, hoodies, caps and stickers.
+            </p>
+            <a
+              href={STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border border-foreground bg-acid px-3 py-2 font-mono text-xs font-semibold whitespace-nowrap text-acid-ink transition hover:-translate-y-0.5 hover:bg-orange hover:text-[#17100c]"
+            >
+              Store.Chubbicorns.com ↗
+            </a>
+          </aside>
           <DisclaimerText />
           {CONTACT && (
             <p className="mt-2">
