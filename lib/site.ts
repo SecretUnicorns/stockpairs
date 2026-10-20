@@ -7,6 +7,9 @@ export const SITE_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   : "http://localhost:3000";
 
+/** The Chubbicorns merch store, promoted at the bottom of every page. */
+export const STORE_URL = "https://store.chubbicorns.com";
+
 /** Only production should be in search results, not preview deployments. */
 export const isProduction = process.env.VERCEL_ENV === "production";
 
