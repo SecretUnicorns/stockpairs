@@ -68,18 +68,31 @@ export default async function Home() {
       <PairsTable rows={rows} now={loadedAt} />
 
       <div className="flex flex-col gap-2 text-sm text-muted">
-        <p>
-          Market data from DexScreener, refreshed about once a minute. Price,
-          24h change and market cap are for the token across its main pool;
-          liquidity and 24h volume are for the pool listed here.
-        </p>
-        <p>
-          Every pair trades against a token, not the asset itself. A tokenized
-          stock is a token that tracks a share price — it is not the share, it
-          carries no ownership or voting rights, and it can trade above or below
-          the real stock. Bridged crypto is a token on this chain backed by the
-          real coin held elsewhere.
-        </p>
+        <p>Live data from DexScreener, refreshed about once a minute.</p>
+        <details className="group">
+          <summary className="cursor-pointer font-semibold text-foreground list-none underline hover:text-orange [&::-webkit-details-marker]:hidden">
+            How to read this board{" "}
+            <span
+              aria-hidden="true"
+              className="inline-block group-open:rotate-90"
+            >
+              ▸
+            </span>
+          </summary>
+          <div className="mt-2 flex flex-col gap-2">
+            <p>
+              Price, 24h change and market cap are for the token across its main
+              pool; liquidity and 24h volume are for the pool listed here.
+            </p>
+            <p>
+              Every pair trades against a token, not the asset itself. A
+              tokenized stock is a token that tracks a share price — it is not
+              the share, it carries no ownership or voting rights, and it can
+              trade above or below the real stock. Bridged crypto is a token on
+              this chain backed by the real coin held elsewhere.
+            </p>
+          </div>
+        </details>
       </div>
     </main>
   );

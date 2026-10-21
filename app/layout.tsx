@@ -47,8 +47,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <aside className="mb-4 flex flex-wrap items-center gap-4 border border-foreground bg-surface p-4 text-sm text-foreground">
             <Image src={chubbicorn} alt="" className="h-14 w-auto shrink-0" />
             <p className="min-w-48 flex-1">
-              <span className="font-semibold">Like the unicorn?</span> Get
-              Chubbicorns tees, hoodies, caps and stickers.
+              <span className="font-semibold">
+                Check out the Chubbicorns Merch.
+              </span>
             </p>
             <a
               href={STORE_URL}
@@ -59,7 +60,27 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               Store.Chubbicorns.com ↗
             </a>
           </aside>
-          <DisclaimerText />
+          {/* Everyone agrees to the full text in the pop-up first, so the
+              footer keeps a one-line summary and the rest one tap away. */}
+          <p>
+            <strong className="text-foreground">Not financial advice.</strong>{" "}
+            Data can be wrong, tokenized stocks aren&apos;t stocks, and meme
+            coins can go to zero. Do your own research.
+          </p>
+          <details className="group">
+            <summary className="cursor-pointer font-semibold text-foreground list-none underline hover:text-orange [&::-webkit-details-marker]:hidden">
+              Read the full disclaimer{" "}
+              <span
+                aria-hidden="true"
+                className="inline-block group-open:rotate-90"
+              >
+                ▸
+              </span>
+            </summary>
+            <div className="mt-2 flex flex-col gap-2">
+              <DisclaimerText />
+            </div>
+          </details>
           {CONTACT && (
             <p className="mt-2">
               Want your token listed, or spotted a mistake?{" "}
@@ -72,20 +93,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               </a>
             </p>
           )}
-          <p className="mt-2 flex items-center gap-2 font-mono tracking-widest uppercase">
-            <Image src={chubbicorn} alt="" className="h-7 w-auto" />
-            <span>
-              A{" "}
-              <a
-                href="https://www.chubbicorns.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-foreground"
-              >
-                Chubbicorns
-              </a>{" "}
-              project
-            </span>
+          <p className="mt-2 font-mono tracking-widest uppercase">
+            A{" "}
+            <a
+              href="https://www.chubbicorns.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-foreground"
+            >
+              Chubbicorns
+            </a>{" "}
+            project
           </p>
         </footer>
         <DisclaimerGate>
