@@ -59,7 +59,27 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               Store.Chubbicorns.com ↗
             </a>
           </aside>
-          <DisclaimerText />
+          {/* Everyone agrees to the full text in the pop-up first, so the
+              footer keeps a one-line summary and the rest one tap away. */}
+          <p>
+            <strong className="text-foreground">Not financial advice.</strong>{" "}
+            Data can be wrong, tokenized stocks aren&apos;t stocks, and meme
+            coins can go to zero. Do your own research.
+          </p>
+          <details className="group">
+            <summary className="cursor-pointer font-semibold text-foreground list-none underline hover:text-orange [&::-webkit-details-marker]:hidden">
+              Read the full disclaimer{" "}
+              <span
+                aria-hidden="true"
+                className="inline-block group-open:rotate-90"
+              >
+                ▸
+              </span>
+            </summary>
+            <div className="mt-2 flex flex-col gap-2">
+              <DisclaimerText />
+            </div>
+          </details>
           {CONTACT && (
             <p className="mt-2">
               Want your token listed, or spotted a mistake?{" "}
