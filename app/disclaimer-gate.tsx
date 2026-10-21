@@ -81,18 +81,32 @@ export default function DisclaimerGate({
           Quick heads-up first
         </h2>
         <p className="mb-3 text-sm">
-          {SITE_NAME} tracks risky assets. Read these seven short points, then
-          tick the box to see the board.
+          {SITE_NAME} tracks risky assets. Scroll through these seven short
+          points, then tick the box to see the board.
         </p>
-        <div
-          ref={scrollRef}
-          onScroll={(event) => {
-            if (atEnd(event.currentTarget)) setScrolledToEnd(true);
-          }}
-          tabIndex={0}
-          className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto border border-border bg-surface p-3 text-sm"
-        >
-          {children}
+        <div className="relative flex min-h-0 flex-1 flex-col">
+          <div
+            ref={scrollRef}
+            onScroll={(event) => {
+              if (atEnd(event.currentTarget)) setScrolledToEnd(true);
+            }}
+            tabIndex={0}
+            className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto border border-border bg-surface p-3 text-sm"
+          >
+            {children}
+          </div>
+          {/* The box stays locked until the end, so make "there's more
+              below" impossible to miss. Floats inside the border. */}
+          {!scrolledToEnd && (
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-px bottom-px flex h-16 items-end justify-center bg-linear-to-t from-surface via-surface/80 to-transparent pb-2"
+            >
+              <span className="border border-foreground bg-acid px-2.5 py-0.5 font-mono text-xs font-semibold text-acid-ink motion-safe:animate-bounce">
+                ↓ Scroll for more
+              </span>
+            </div>
+          )}
         </div>
         <label
           className={`mt-3 flex items-start gap-2 text-sm ${
