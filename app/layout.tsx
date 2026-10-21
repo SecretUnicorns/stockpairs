@@ -47,8 +47,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <aside className="mb-4 flex flex-wrap items-center gap-4 border border-foreground bg-surface p-4 text-sm text-foreground">
             <Image src={chubbicorn} alt="" className="h-14 w-auto shrink-0" />
             <p className="min-w-48 flex-1">
-              <span className="font-semibold">Like the unicorn?</span> Get
-              Chubbicorns tees, hoodies, caps and stickers.
+              <span className="font-semibold">
+                Check out the Chubbicorns Merch.
+              </span>
             </p>
             <a
               href={STORE_URL}
@@ -92,20 +93,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               </a>
             </p>
           )}
-          <p className="mt-2 flex items-center gap-2 font-mono tracking-widest uppercase">
-            <Image src={chubbicorn} alt="" className="h-7 w-auto" />
-            <span>
-              A{" "}
-              <a
-                href="https://www.chubbicorns.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-foreground"
-              >
-                Chubbicorns
-              </a>{" "}
-              project
-            </span>
+          <p className="mt-2 font-mono tracking-widest uppercase">
+            A{" "}
+            <a
+              href="https://www.chubbicorns.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:text-foreground"
+            >
+              Chubbicorns
+            </a>{" "}
+            project
           </p>
         </footer>
         <DisclaimerGate>
