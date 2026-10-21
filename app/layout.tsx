@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import Image from "next/image";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import DisclaimerGate from "@/app/disclaimer-gate";
 import DisclaimerText from "@/app/disclaimer-text";
@@ -90,6 +91,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <DisclaimerGate>
           <DisclaimerText />
         </DisclaimerGate>
+        <Analytics />
       </body>
     </html>
   );
