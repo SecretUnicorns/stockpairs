@@ -36,7 +36,11 @@ export default async function Home() {
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-4 pt-12 pb-6">
       <header className="flex flex-col gap-3">
         <span className="inline-flex items-center gap-2 font-mono text-xs font-semibold tracking-widest uppercase">
-          <span aria-hidden="true" className="size-2 bg-acid" />
+          {/* Blinks so the board reads as live; still for reduced motion. */}
+          <span
+            aria-hidden="true"
+            className="size-2 bg-acid motion-safe:animate-blink"
+          />
           Live board
         </span>
         <h1>

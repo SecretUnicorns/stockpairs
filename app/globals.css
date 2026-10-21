@@ -48,6 +48,14 @@
   --color-down: var(--down);
   --font-sans: var(--font-archivo);
   --font-mono: var(--font-ibm-plex-mono);
+  /* The "Live board" dot: fades almost out and back, like a recording light. */
+  --animate-blink: blink 1.6s ease-in-out infinite;
+
+  @keyframes blink {
+    50% {
+      opacity: 0.15;
+    }
+  }
 }
 
 body {
