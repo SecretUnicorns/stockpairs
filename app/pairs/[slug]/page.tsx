@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import CopyAddress from "@/app/copy-address";
+import ChartFallback from "@/app/pairs/[slug]/chart-fallback";
 import PriceChart from "@/app/pairs/[slug]/price-chart";
 import { getMarketData } from "@/lib/dexscreener";
 import {
@@ -207,9 +208,12 @@ export default async function PairPage({ params }: PageProps<"/pairs/[slug]">) {
             supply={supply}
           />
         ) : (
-          <p className="border border-foreground bg-surface px-4 py-16 text-center text-muted">
-            Chart unavailable right now.
-          </p>
+          // Built while GeckoTerminal was busy: load the chart in the browser.
+          <ChartFallback
+            slug={pairSlug(pair)}
+            symbol={token.symbol}
+            supply={supply}
+          />
         )}
         {pool && (
           <p className="font-mono text-[11px] tracking-widest text-muted uppercase">

@@ -12,6 +12,8 @@ const HOURS = 720;
 // Daily candles back to the pool's creation, for the "all" range. 1000 is
 // the API's maximum, almost three years.
 const DAYS = 1000;
+// How long to wait before the one retry when GeckoTerminal is busy.
+const RETRY_DELAY_MS = 1500;
 
 const networks: Record<Chain, string> = {
   solana: "solana",
@@ -67,24 +69,36 @@ function ohlcvUrl(chain: Chain, poolAddress: string): string {
 }
 
 async function fetchCandles(url: string): Promise<Candle[] | null> {
-  try {
-    const res = await fetch(url, {
-      headers: { accept: "application/json" },
-      next: { revalidate: REVALIDATE_SECONDS },
-    });
-    if (!res.ok) return null;
-    const body = await res.json();
-    const list: number[][] = body?.data?.attributes?.ohlcv_list ?? [];
-    return list
-      .map(([time, open, high, low, close]) => ({
-        time,
-        open,
-        high,
-        low,
-        close,
-      }))
-      .reverse();
-  } catch {
-    return null;
+  // The free API answers 429 when too many requests arrive at once, e.g.
+  // while a deploy builds every page. One short pause usually clears it.
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const res = await fetch(url, {
+        headers: { accept: "application/json" },
+        next: { revalidate: REVALIDATE_SECONDS },
+      });
+      if (res.ok) return toCandles(await res.json());
+      const busy = res.status === 429 || res.status >= 500;
+      if (!busy) return null;
+    } catch {
+      // Network hiccup: worth one more try too.
+    }
+    if (attempt === 1) await new Promise((r) => setTimeout(r, RETRY_DELAY_MS));
   }
+  return null;
+}
+
+function toCandles(body: unknown): Candle[] {
+  const list: number[][] =
+    (body as { data?: { attributes?: { ohlcv_list?: number[][] } } })?.data
+      ?.attributes?.ohlcv_list ?? [];
+  return list
+    .map(([time, open, high, low, close]) => ({
+      time,
+      open,
+      high,
+      low,
+      close,
+    }))
+    .reverse();
 }
